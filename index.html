@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>动物一家</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}html{height:100%}
+body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:linear-gradient(180deg,#fff9e6 0%,#fef7ed 8%,#fef3c7 18%,#fce4ec 38%,#f8bbd0 62%,#ffccbc 84%,#fff3e0 100%);font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;-webkit-tap-highlight-color:transparent}
+
+.floating-bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.float-item{position:absolute;animation:floatUp linear infinite;opacity:.2;font-size:16px}
+@keyframes floatUp{0%{transform:translateY(105vh) rotate(0) scale(0);opacity:0}8%{opacity:.2}88%{opacity:.2}100%{transform:translateY(-8vh) rotate(360deg) scale(1);opacity:0}}
+
+.app{position:relative;z-index:1;max-width:420px;width:94%;margin:0 auto;padding:12px 0 30px}
+.main-title{text-align:center;font-size:18px;font-weight:800;color:#d81b60;letter-spacing:4px;margin-bottom:8px}
+
+.family-nav{background:rgba(255,255,255,.48);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:20px;padding:8px 4px 6px;margin-bottom:10px;box-shadow:0 4px 20px rgba(150,90,40,.05)}
+.nav-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.nav-card{display:flex;flex-direction:column;align-items:center;gap:0;padding:6px 2px 5px;border-radius:14px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.35);user-select:none;-webkit-tap-highlight-color:transparent}
+.nav-card:active{transform:scale(.93)}
+.nav-card.sel{background:rgba(255,255,255,.85);box-shadow:0 3px 12px rgba(0,0,0,.08);transform:scale(1.04)}
+.nav-avatar{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;position:relative;overflow:visible;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.nav-name{font-size:11px;font-weight:700;color:#5d4037}
+.av-dad{background:linear-gradient(135deg,#c8e6c9,#81c784);border:2px solid #4caf50}
+.av-mom{background:linear-gradient(135deg,#fff8e1,#ffcc80);border:2px solid #ffb74d}
+.av-bro{background:linear-gradient(135deg,#e3f2fd,#64b5f6);border:2px solid #42a5f5;height:56px;border-radius:28px}
+.av-aunt{background:linear-gradient(135deg,#fce4ec,#f48fb1);border:2px solid #ec407a}
+.av-gm{background:linear-gradient(135deg,#fff9c4,#ffd54f);border:2px solid #ffc107}
+.av-me{background:linear-gradient(135deg,#f3e5f5,#ce93d8);border:2px dashed #ab47bc}
+
+.char-page{display:none;background:rgba(255,255,255,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:26px;padding:20px 14px 14px;text-align:center;box-shadow:0 10px 36px rgba(0,0,0,.07);margin-bottom:10px;animation:fadeIn .35s ease-out;overflow:visible}
+.char-page.show{display:block}
+@keyframes fadeIn{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+.char-name-big{font-size:22px;font-weight:700;color:#d81b60;letter-spacing:3px;margin:6px 0 2px}
+.char-mood{font-size:13px;font-weight:500;color:#e91e63;margin:3px 0}
+.char-talk{display:inline-block;background:#fff;border-radius:14px;padding:7px 14px;font-size:13px;color:#6d4c41;margin-top:4px;box-shadow:0 2px 7px rgba(0,0,0,.04);max-width:88%;transition:all .3s}
+
+.figure-stage{display:inline-block;cursor:pointer;touch-action:none;transition:transform .15s;position:relative;z-index:2}
+.figure-wrap{position:relative;display:inline-block;animation:figIdle 2.5s ease-in-out infinite}
+@keyframes figIdle{0%,100%{transform:translateY(0)}28%{transform:translateY(-5px)}48%{transform:translateY(0)}68%{transform:translateY(-3px)}}
+.figure-wrap.eating{animation:eatBounce .4s ease-in-out 4!important}
+@keyframes eatBounce{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-12px) rotate(-5deg)}50%{transform:translateY(0) rotate(0)}75%{transform:translateY(-6px) rotate(5deg)}}
+.figure-wrap.jumping{animation:jumpHigh .5s ease-in-out 3!important}
+@keyframes jumpHigh{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}
+.figure-wrap.spinning{animation:spinRound .6s ease-in-out 3!important}
+@keyframes spinRound{0%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(15deg)}100%{transform:translateY(0) rotate(0)}}
+.figure-wrap.nodding{animation:nodHead .35s ease-in-out 5!important}
+@keyframes nodHead{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+/*老爹*/ .dad-fig{width:100px;height:108px;position:relative;display:inline-block}
+.dad-fig .body{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:62px;height:44px;background:linear-gradient(180deg,#1565c0,#0d47a1);border-radius:32px 32px 12px 12px}
+.dad-fig .badge{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);width:12px;height:14px;background:linear-gradient(180deg,#ffd54f,#ffb300);border-radius:3px;z-index:2}
+.dad-fig .head{position:absolute;top:5px;left:50%;transform:translateX(-50%);width:54px;height:50px;background:linear-gradient(180deg,#66bb6a,#43a047);border-radius:50%}
+.dad-fig .police-hat{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:38px;height:8px;background:#0d47a1;border-radius:3px 3px 0 0;z-index:3}
+.dad-fig .police-hat::after{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:18px;height:4px;background:#ffd54f;border-radius:2px}
+.dad-fig .horn{position:absolute;top:-12px;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:14px solid#2e7d32}
+.dad-fig .horn.l{left:6px;transform:rotate(-15deg)}.dad-fig .horn.r{right:6px;transform:rotate(15deg)}
+.dad-fig .face{position:absolute;top:7px;left:50%;transform:translateX(-50%);width:32px;height:26px;background:#c8e6c9;border-radius:50%}
+.dad-fig .eyes{position:absolute;top:5px;left:50%;transform:translateX(-50%);display:flex;gap:9px}
+.dad-fig .eye{width:7px;height:7px;background:#1b5e20;border-radius:50%}
+.dad-fig .snout{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:14px;height:7px;background:#a5d6a7;border-radius:50%}
+.dad-fig .cup{position:absolute;bottom:2px;right:4px;font-size:16px;animation:wobble 3s ease-in-out infinite}
+@keyframes wobble{0%,100%{transform:rotate(0)}30%{transform:rotate(-15deg) translateY(-2px)}70%{transform:rotate(8deg)}}
+.dad-fig .blush{position:absolute;top:10px;width:7px;height:4px;background:rgba(244,114,124,.35);border-radius:50%}
+.dad-fig .blush.l{left:3px}.dad-fig .blush.r{right:3px}
+
+/*老妈*/ .mom-fig{width:100px;height:108px;position:relative;display:inline-block}
+.mom-fig .body{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:62px;height:44px;background:linear-gradient(180deg,#fffde7,#fff9c4);border-radius:38px 38px 20px 20px;box-shadow:0 0 0 5px#fafafa,0 0 0 8px#f5f5f5}
+.mom-fig .head{position:absolute;top:0;left:50%;transform:translateX(-50%);width:54px;height:48px;background:linear-gradient(180deg,#fffde7,#fff9c4);border-radius:50%;box-shadow:0 0 0 4px#fafafa}
+.mom-fig .glasses{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:28px;height:9px;border:2px solid#5d4037;border-radius:5px;z-index:3}
+.mom-fig .glasses::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:4px;height:2px;background:#5d4037}
+.mom-fig .eyes{position:absolute;top:6px;left:50%;transform:translateX(-50%);display:flex;gap:9px;z-index:2}
+.mom-fig .eye{width:7px;height:7px;background:#4a3728;border-radius:50%}
+.mom-fig .nose{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:9px;height:6px;background:#4a3728;border-radius:50%}
+.mom-fig .mouth{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:12px;height:4px;border-bottom:2px solid#4a3728;border-radius:0 0 50% 50%}
+.mom-fig .bun{position:absolute;top:-4px;right:2px;width:13px;height:13px;background:#fafafa;border-radius:50%;box-shadow:0 0 0 3px#eee}
+.mom-fig .book{position:absolute;bottom:8px;left:6px;font-size:18px;z-index:3}
+.mom-fig .note{position:absolute;top:-2px;right:-4px;font-size:12px;animation:noteUp 2s ease-out infinite}
+@keyframes noteUp{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-14px)}}
+.mom-fig .blush{position:absolute;top:9px;width:7px;height:4px;background:rgba(244,114,124,.35);border-radius:50%}
+.mom-fig .blush.l{left:1px}.mom-fig .blush.r{right:1px}
+
+/*老弟*/ .bro-fig{width:100px;height:120px;position:relative;display:inline-block}
+.bro-fig .body{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:44px;height:56px;background:linear-gradient(180deg,#e3f2fd,#bbdefb);border-radius:24px 24px 12px 12px}
+.bro-fig .head{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:50px;height:46px;background:linear-gradient(180deg,#e3f2fd,#bbdefb);border-radius:50%}
+.bro-fig .ear{position:absolute;top:-16px;width:11px;height:28px;background:linear-gradient(180deg,#e3f2fd,#90caf9);border-radius:7px 7px 3px 3px}
+.bro-fig .ear.l{left:9px;transform:rotate(-5deg)}.bro-fig .ear.r{right:9px;transform:rotate(5deg)}
+.bro-fig .headphones{position:absolute;top:-2px;left:50%;transform:translateX(-50%);width:36px;height:6px;background:#37474f;border-radius:6px;z-index:3}
+.bro-fig .headphones::before,.bro-fig .headphones::after{content:'';position:absolute;top:4px;width:8px;height:10px;background:#e53935;border-radius:50%}
+.bro-fig .headphones::before{left:-2px}.bro-fig .headphones::after{right:-2px}
+.bro-fig .glasses{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:28px;height:9px;border:2px solid#37474f;border-radius:5px;z-index:2}
+.bro-fig .glasses::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:4px;height:2px;background:#37474f}
+.bro-fig .eyes{position:absolute;top:4px;left:50%;transform:translateX(-50%);display:flex;gap:9px;z-index:1}
+.bro-fig .eye{width:7px;height:7px;background:#263238;border-radius:50%}
+.bro-fig .mouth{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:11px;height:4px;border-bottom:2px solid#37474f;border-radius:0 0 50% 50%}
+.bro-fig .ball{position:absolute;bottom:-4px;right:6px;font-size:20px;animation:bounce .5s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.bro-fig .blush{position:absolute;top:7px;width:7px;height:4px;background:rgba(244,114,124,.35);border-radius:50%}
+.bro-fig .blush.l{left:1px}.bro-fig .blush.r{right:1px}
+
+/*姨*/ .aunt-fig{width:100px;height:108px;position:relative;display:inline-block}
+.aunt-fig .body{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:48px;height:52px;background:linear-gradient(180deg,#fff,#f5f5f5);border-radius:26px 26px 12px 12px;box-shadow:inset 0 0 0 2px rgba(236,64,122,.15)}
+.aunt-fig .stripe{position:absolute;left:50%;transform:translateX(-50%);width:26px;height:3px;background:rgba(0,0,0,.1);border-radius:2px}
+.aunt-fig .stripe.s1{bottom:22px}.aunt-fig .stripe.s2{bottom:12px}.aunt-fig .stripe.s3{bottom:2px}
+.aunt-fig .head{position:absolute;top:0;left:50%;transform:translateX(-50%);width:52px;height:48px;background:linear-gradient(180deg,#ffcc80,#ffa726);border-radius:50%}
+.aunt-fig .ear{position:absolute;top:-2px;width:12px;height:12px;background:#ff9800;border-radius:50%}
+.aunt-fig .ear.l{left:-2px}.aunt-fig .ear.r{right:-2px}
+.aunt-fig .nurse-cap{position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:28px;height:7px;background:#fff;border-radius:3px 3px 0 0;z-index:3;box-shadow:0 -1px 0#ef5350}
+.aunt-fig .nurse-cap::after{content:'+';position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-size:9px;color:#ef5350;font-weight:700}
+.aunt-fig .eyes{position:absolute;top:6px;left:50%;transform:translateX(-50%);display:flex;gap:9px}
+.aunt-fig .eye{width:7px;height:7px;background:#3e2723;border-radius:50%}
+.aunt-fig .nose{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:9px;height:5px;background:#3e2723;border-radius:50%}
+.aunt-fig .mouth{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:11px;height:4px;border-bottom:2px solid#3e2723;border-radius:0 0 50% 50%}
+.aunt-fig .blush{position:absolute;top:7px;width:7px;height:4px;background:rgba(244,114,124,.4);border-radius:50%}
+.aunt-fig .blush.l{left:1px}.aunt-fig .blush.r{right:1px}
+
+/*姥姥*/ .gm-fig{width:100px;height:108px;position:relative;display:inline-block}
+.gm-fig .body{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:54px;height:46px;background:linear-gradient(180deg,#d4a574,#b8860b);border-radius:34px 34px 14px 14px}
+.gm-fig .head{position:absolute;top:2px;left:50%;transform:translateX(-50%);width:46px;height:54px;background:linear-gradient(180deg,#d4a574,#b8860b);border-radius:50%}
+.gm-fig .mane{position:absolute;top:0;left:50%;transform:translateX(-50%);width:28px;height:9px;background:#8d6e2e;border-radius:50%}
+.gm-fig .eyes{position:absolute;top:10px;left:50%;transform:translateX(-50%);display:flex;gap:11px}
+.gm-fig .eye{width:8px;height:8px;background:#3e2723;border-radius:50%}
+.gm-fig .snout{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:18px;height:11px;background:#c4946c;border-radius:50%}
+.gm-fig .nostril{position:absolute;bottom:7px;width:4px;height:3px;background:#3e2723;border-radius:50%}
+.gm-fig .nostril.l{left:14px}.gm-fig .nostril.r{right:14px}
+.gm-fig .mouth{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:14px;height:4px;border-bottom:2px solid#3e2723;border-radius:0 0 50% 50%}
+.gm-fig .phone{position:absolute;bottom:6px;right:6px;width:14px;height:22px;background:linear-gradient(180deg,#333,#555);border-radius:4px;animation:phoneGlow 2s ease-in-out infinite;z-index:3}
+@keyframes phoneGlow{0%,100%{box-shadow:0 0 4px#ff9800}50%{box-shadow:0 0 12px#ff9800,0 0 22px#ff9800}}
+.gm-fig .live{position:absolute;top:8px;right:-3px;width:6px;height:6px;background:#f44336;border-radius:50%;animation:liveB 1s ease-in-out infinite}
+@keyframes liveB{0%,100%{opacity:1}50%{opacity:.25}}
+.gm-fig .blush{position:absolute;top:8px;width:7px;height:4px;background:rgba(244,114,124,.35);border-radius:50%}
+.gm-fig .blush.l{left:0}.gm-fig .blush.r{right:0}
+
+/*梁艺帆*/ .me-fig{width:100px;height:108px;position:relative;display:inline-block}
+.me-fig .db{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:70px;height:52px;background:linear-gradient(180deg,#f5a623,#e8961a);border-radius:38px 38px 24px 24px}
+.me-fig .dl{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:44px;height:28px;background:#fef3c7;border-radius:22px}
+.me-fig .dh{position:absolute;top:0;left:50%;transform:translateX(-50%);width:60px;height:56px;background:linear-gradient(180deg,#f5a623,#e8961a);border-radius:50%}
+.me-fig .de{position:absolute;top:-5px;width:20px;height:24px;background:#d4820e;border-radius:50% 50% 12% 12%}
+.me-fig .de.l{left:-2px;transform:rotate(-16deg)}.me-fig .de.r{right:-2px;transform:rotate(16deg)}
+.me-fig .df{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:38px;height:30px;background:#fef3c7;border-radius:50%}
+.me-fig .d-eyes{position:absolute;top:7px;left:50%;transform:translateX(-50%);display:flex;gap:12px}
+.me-fig .d-eye{width:8px;height:9px;background:#1a1a1a;border-radius:50%;transition:all .3s}
+.me-fig .d-brows{position:absolute;top:2px;left:50%;transform:translateX(-50%);display:flex;gap:14px}
+.me-fig .d-brow{width:9px;height:3px;background:#4a2800;border-radius:2px;transition:all .3s}
+.me-fig .d-nose{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:11px;height:7px;background:#4a2800;border-radius:50%}
+.me-fig .d-mouth{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:15px;height:5px;border-bottom:2px solid#4a2800;border-radius:0 0 50% 50%;transition:all .3s}
+.me-fig .d-tongue{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:10px;height:8px;background:#f4727c;border-radius:0 0 4px 4px;transition:all .3s}
+.me-fig .d-cheek{position:absolute;top:12px;width:9px;height:5px;background:rgba(244,114,124,.4);border-radius:50%}
+.me-fig .d-cheek.l{left:2px}.me-fig .d-cheek.r{right:2px}
+.me-fig .d-sweat{position:absolute;top:-5px;right:4px;font-size:18px;display:none;animation:sweatFall 1.3s ease-in-out infinite}
+@keyframes sweatFall{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(12px)}}
+.me-fig .d-hearts{position:absolute;font-size:14px;display:none;animation:heartPop .6s ease-out}
+.me-fig .d-hearts.l{top:2px;left:10px}.me-fig .d-hearts.r{top:2px;right:10px}
+@keyframes heartPop{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+.me-fig .d-angry{position:absolute;top:-7px;right:-2px;font-size:16px;display:none;animation:angryPop .5s ease-out}
+@keyframes angryPop{0%{transform:scale(0)}50%{transform:scale(1.5)}100%{transform:scale(1)}}
+.me-fig .d-sauce{position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:26px;height:13px;background:linear-gradient(180deg,#8d6e2e,#6b4f1a);border-radius:50%}
+.me-fig .d-paw{position:absolute;bottom:0;width:16px;height:12px;background:#f5a623;border-radius:50%}
+.me-fig .d-paw.l{left:4px}.me-fig .d-paw.r{right:4px}
+.me-fig .kuaiban{position:absolute;bottom:6px;right:-2px;font-size:16px;z-index:4;animation:kbClap 1.5s ease-in-out infinite}
+@keyframes kbClap{0%,100%{transform:rotate(0)}30%{transform:rotate(-10deg)}70%{transform:rotate(10deg)}}
+
+.char-btns{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:10px}
+.cbtn{padding:11px 15px;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);font-family:inherit;-webkit-tap-highlight-color:transparent;color:#fff;box-shadow:0 5px 18px rgba(0,0,0,.18)}
+.cbtn:active{transform:scale(.88)}
+
+.heart-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;font-size:13px;color:#e91e63;font-weight:600}
+.heart-row .hn{font-size:20px;font-weight:800}
+.gift-shelf{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:6px;min-height:24px}
+.gift-shelf span{font-size:22px;animation:giftPop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes giftPop{0%{transform:scale(0) rotate(-30deg)}60%{transform:scale(1.3) rotate(10deg)}100%{transform:scale(1) rotate(0)}}
+
+.music-btn{position:fixed;bottom:16px;right:16px;z-index:400;width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,.85);font-size:20px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.music-btn:active{transform:scale(.88)}
+.music-btn.on{animation:musicSpin 2s linear infinite}
+@keyframes musicSpin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+
+.toast{position:fixed;top:44%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,.96);border-radius:20px;padding:20px 26px;font-size:18px;font-weight:700;color:#d81b60;z-index:600;pointer-events:none;box-shadow:0 10px 36px rgba(0,0,0,.12);text-align:center;max-width:82%}
+.toast.show{animation:toastPop 2s ease-out forwards}
+@keyframes toastPop{0%{transform:translate(-50%,-50%) scale(0)}12%{transform:translate(-50%,-50%) scale(1.1)}22%{transform:translate(-50%,-50%) scale(1)}75%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-50%) scale(.8);opacity:0}}
+
+.particle{position:fixed;pointer-events:none;z-index:700;font-size:22px;animation:particleFall 2s ease-out forwards}
+@keyframes particleFall{0%{transform:translate(0,0) rotate(0) scale(1);opacity:1}30%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(0);opacity:0}}
+.confetti{position:fixed;pointer-events:none;z-index:650;border-radius:2px;animation:confettiFall 3s ease-out forwards}
+@keyframes confettiFall{0%{transform:translateY(-10vh) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+@media(max-width:360px){.nav-avatar{width:42px;height:42px;font-size:26px}.av-bro{height:48px}.cbtn{padding:9px 12px;font-size:13px}[class*="-fig"]{transform:scale(.78)}}
+</style>
+</head>
+<body>
+<div class="floating-bg" id="floatingBg"></div>
+<div class="toast" id="toast"></div>
+<button class="music-btn" id="musicBtn">🎵</button>
+
+<div class="app">
+  <div class="main-title">🐾 动物一家 🐾 <button id="randomBtn" style="border:none;background:none;font-size:20px;cursor:pointer;padding:0 4px" title="随机换人">🎲</button></div>
+
+  <div class="family-nav">
+    <div class="nav-grid" id="navGrid">
+      <div class="nav-card sel" data-char="me" id="navMe"><div class="nav-avatar av-me">🐶</div><div class="nav-name" style="color:#d81b60">梁艺帆</div></div>
+      <div class="nav-card" data-char="dad" id="navDad"><div class="nav-avatar av-dad">🐲</div><div class="nav-name">老爹</div></div>
+      <div class="nav-card" data-char="mom" id="navMom"><div class="nav-avatar av-mom">🐑</div><div class="nav-name">老妈</div></div>
+      <div class="nav-card" data-char="bro" id="navBro"><div class="nav-avatar av-bro">🐰</div><div class="nav-name">老弟</div></div>
+      <div class="nav-card" data-char="aunt" id="navAunt"><div class="nav-avatar av-aunt">🐯</div><div class="nav-name">姨</div></div>
+      <div class="nav-card" data-char="grandma" id="navGrandma"><div class="nav-avatar av-gm">🐴</div><div class="nav-name">姥姥</div></div>
+    </div>
+  </div>
+
+  <div id="charPage"></div>
+
+  <div class="heart-row">💝 互动了 <span class="hn" id="heartCount">0</span> 次</div>
+  <div class="gift-shelf" id="giftShelf"></div>
+</div>
+
+<script>
+(function(){const p=['❤️','💕','💗','💖','💝','🌸','🌷','⭐','✨','🌺','💐','🎀','🌟','☁️'];const bg=document.getElementById('floatingBg');function a(){const e=document.createElement('span');e.className='float-item';e.textContent=p[Math.floor(Math.random()*p.length)];e.style.left=Math.random()*95+'%';e.style.fontSize=(12+Math.random()*24)+'px';e.style.animationDuration=(7+Math.random()*14)+'s';e.style.animationDelay=Math.random()*9+'s';bg.appendChild(e);setTimeout(()=>e.remove(),22000)}for(let i=0;i<12;i++)a();setInterval(a,1500)})();
+
+function P(x,y,n,pool){pool=pool||['❤️','💕','💗','💖','💝','✨','🌸','⭐','🌷','🎀'];for(let i=0;i<n;i++){const p=document.createElement('span');p.className='particle';p.textContent=pool[Math.floor(Math.random()*pool.length)];p.style.left=x+'px';p.style.top=y+'px';p.style.fontSize=(14+Math.random()*26)+'px';p.style.setProperty('--dx',(Math.random()-.5)*210+'px');p.style.setProperty('--dy',-(60+Math.random()*180)+'px');p.style.setProperty('--rot',(Math.random()-.5)*500+'deg');p.style.animationDuration=(1.2+Math.random()*1.6)+'s';document.body.appendChild(p);setTimeout(()=>p.remove(),2300)}}
+function C(x,y,n){const cl=['#e91e63','#ff9800','#ffeb3b','#4caf50','#2196f3','#9c27b0','#ff5722','#00bcd4'];for(let i=0;i<n;i++){const d=document.createElement('div');d.className='confetti';d.style.left=(x-50+Math.random()*100)+'px';d.style.top=y+'px';d.style.background=cl[Math.floor(Math.random()*cl.length)];d.style.width=(5+Math.random()*10)+'px';d.style.height=(5+Math.random()*10)+'px';d.style.animationDuration=(2+Math.random()*2.5)+'s';d.style.animationDelay=Math.random()*.4+'s';document.body.appendChild(d);setTimeout(()=>d.remove(),3600)}}
+const toast=document.getElementById('toast');let tt;
+function T(t){clearTimeout(tt);toast.textContent=t;toast.classList.remove('show');void toast.offsetWidth;toast.classList.add('show');tt=setTimeout(()=>toast.classList.remove('show'),2000)}
+document.getElementById('randomBtn').addEventListener('click',function(e){e.stopPropagation();const chars=['dad','mom','bro','aunt','grandma','me'];const rc=chars[Math.floor(Math.random()*chars.length)];const r=this.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top;P(cx,cy,20,['🎲','✨','🎉']);sC(rc)})
+
+let hc=0,combo=0,comboTimer=null;const hce=document.getElementById('heartCount'),gs=document.getElementById('giftShelf');
+function aH(){hc++;hce.textContent=hc;combo++;clearTimeout(comboTimer);comboTimer=setTimeout(()=>combo=0,1500);if(combo>=3){const r=Math.random();if(r<.3)C(window.innerWidth/2,100,40);P(window.innerWidth/2,200,12,['🔥','⚡','💥','✨']);if(combo>=5)T('🔥 '+combo+'连击！！');else if(combo>=3)T('✨ '+combo+'连击！')}}
+function aG(e){const s=document.createElement('span');s.textContent=e;gs.appendChild(s);if(gs.children.length>20)gs.firstChild.remove()}
+
+let ac=null,mo=false,mt=null;
+const mel=[523,587,659,784,880,784,659,587,523,659,784,1047,880,784,659,523],rhy=[280,280,280,280,380,180,180,380,280,280,280,280,480,180,180,480];
+function tM(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();mo=!mo;const b=document.getElementById('musicBtn');if(mo){b.textContent='🎶';b.classList.add('on');pN(0)}else{b.textContent='🎵';b.classList.remove('on');clearTimeout(mt);if(ac.state==='running')ac.suspend()}}
+function pN(i){if(!mo)return;if(ac.state==='suspended')ac.resume();const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=mel[i%mel.length];g.gain.setValueAtTime(.05,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+rhy[i%rhy.length]/1000);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime);o.stop(ac.currentTime+rhy[i%rhy.length]/1000);mt=setTimeout(()=>pN((i+1)%mel.length),rhy[i%rhy.length])}
+document.getElementById('musicBtn').addEventListener('click',tM);
+
+const talks={
+  dad:['多喝水，别喝饮料','我出去吃个饭去','我晚上值班','沉住气','腹有诗书气自华'],
+  mom:['我上课去了','中午揍嘛饭啊？','我又研究语文呢','伟大的梁艺帆！','累了就歇歇，别硬撑','妈妈永远支持你','开心最重要，考试算啥'],
+  bro:['你个乐子','梁艺帆又看手机','我打篮球去了','全家就我最高','新写了一首听不','梁艺帆来打球','又破防了哈哈'],
+  aunt:['下回这个护理考试肯定考过','干啥呢你们','累死了','她姐姐！','我们科室今天忙飞了','夜班好累啊…'],
+  grandma:['奇奇！','奇奇吃了吗？','来给姥姥点点关注','拍了新短视频','姥姥粉丝又涨了'],
+  me:['我不想考试','感觉学不完了','困困困']
+};
+
+let cid='me';let cs={dad:0,mom:0,bro:0,aunt:0,grandma:0,me:0};
+const cfg={
+  me:{name:'梁艺帆',moods:['😫 为期末发愁中…','💕 想老妈了！','😤 别烦，复习呢！','😆 嘿嘿开心！'],btns:[{e:'🍔',t:'喂汉堡',p:['🍔','😋','✨'],n:18},{e:'🍜',t:'喂面条',p:['🍜','😋','💕'],n:18},{e:'🥤',t:'喂可乐',p:['🥤','😆','✨'],n:18},{e:'🍗',t:'喂炸鸡',p:['🍗','😋','💕'],n:20}],cl:['#e91e63','#ff9800','#2196f3','#f44336'],tp:'dog',ac:'eating'},
+  dad:{name:'老爹',moods:['😌 微醺中…','🍶 喝高兴了！','😴 喝多了…','💪 精神着'],btns:[{e:'🍶',t:'投喂酒',p:['🍶','🐲','✨'],n:18},{e:'🥜',t:'投喂花生米',p:['🥜','😋','✨'],n:16},{e:'🫘',t:'投喂豆腐皮',p:['🫘','😋','🐲'],n:16}],cl:['#43a047','#ff9800','#8d6e63'],tp:'dad',ac:'spinning'},
+  mom:{name:'老妈',moods:['📖 备课中…','🍳 琢磨做饭','📝 研究语文','🌟 为你骄傲'],btns:[{e:'📝',t:'学习作文',p:['📝','🐑','✨'],n:14},{e:'📜',t:'学习文言文',p:['📜','🐑','📖'],n:14},{e:'📖',t:'学习阅读题',p:['📖','🐑','💡'],n:14},{e:'🍈',t:'投喂榴莲',p:['🍈','😆','💕'],n:20}],cl:['#ff9800','#f44336','#9c27b0','#4caf50'],tp:'mom',ac:'nodding'},
+  bro:{name:'老弟',moods:['🏀 打球中…','🎤 创作中…','😎 帅就完了','😂 乐子人'],btns:[{e:'🌶️',t:'投喂辣条',p:['🌶️','🔥','😆'],n:16},{e:'🍫',t:'投喂巧克力',p:['🍫','😋','✨'],n:16},{e:'🧊',t:'投喂冰红茶',p:['🧊','🥤','😆'],n:16},{e:'🎵',t:'创作新歌',p:['🎵','🎤','🔥','✨'],n:24}],cl:['#f44336','#795548','#2196f3','#9c27b0'],tp:'bro',ac:'jumping'},
+  aunt:{name:'姨',moods:['💉 值班中…','😩 忙飞了','✨ 还在学呢','😊 开心～'],btns:[{e:'🍞',t:'投喂面包',p:['🍞','🐯','✨'],n:16},{e:'🥤',t:'投喂健力宝',p:['🥤','🐯','💪'],n:18},{e:'🍖',t:'投喂糖醋里脊',p:['🍖','😋','💕'],n:20}],cl:['#ff9800','#2196f3','#f44336'],tp:'aunt',ac:'eating'},
+  grandma:{name:'姥姥',moods:['📱 直播中…','🎬 拍视频呢','💃 跳舞中…','😋 吃好吃的'],btns:[{e:'📹',t:'配合拍视频',p:['📹','📱','✨','😂'],n:18},{e:'💪',t:'戳戳胳膊',p:['💪','😆','🐴'],n:16},{e:'🍜',t:'吃炸酱面',p:['🍜','😋','💕'],n:20}],cl:['#ff9800','#e91e63','#ffc107'],tp:'grandma',ac:'jumping'}
+};
+
+function md(stage){let d=false,sx,sy,ox,oy;stage.addEventListener('pointerdown',function(e){d=true;stage.setPointerCapture(e.pointerId);sx=e.clientX;sy=e.clientY;const t=stage.style.transform.match(/translate\((.+?)px,\s*(.+?)px\)/);ox=t?parseFloat(t[1]):0;oy=t?parseFloat(t[2]):0;stage._dr=false;e.stopPropagation()});stage.addEventListener('pointermove',function(e){if(!d)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)>4||Math.abs(dy)>4)stage._dr=true;stage.style.transform='translate('+(ox+dx)+'px,'+(oy+dy)+'px)';stage.style.transition='none'});stage.addEventListener('pointerup',function(){if(!d)return;d=false;stage.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)';stage.style.transform='translate(0,0)';setTimeout(()=>stage.style.transition='transform .15s',500)})}
+
+function sDM(mi){
+  const ms=[
+    {b:()=>{bl2('14deg');br2('-14deg')},e:()=>{el2('9px');er2('9px');hl2('none');hr2('none')},m:()=>{dm2('0 0 50% 50%','2px solid#4a2800','5px','15px','none')},t:()=>{dt2('block','8px')},x:()=>{sw2('block');ag2('none')}},
+    {b:()=>{bl2('0');br2('0')},e:()=>{el2('4px');er2('4px');hl2('block');hr2('block')},m:()=>{dm2('0 0 60% 60%','2.5px solid#4a2800','7px','18px','none')},t:()=>{dt2('block','11px')},x:()=>{sw2('none');ag2('none')}},
+    {b:()=>{bl2('-13deg');br2('13deg')},e:()=>{el2('7px');er2('7px');hl2('none');hr2('none')},m:()=>{dm2('50% 50% 0 0','none','3px','13px','2px solid#4a2800')},t:()=>{dt2('none','0')},x:()=>{sw2('none');ag2('block')}},
+    {b:()=>{bl2('-4deg');br2('4deg')},e:()=>{el2('9px');er2('9px');hl2('none');hr2('none')},m:()=>{dm2('0 0 70% 70%','2.5px solid#4a2800','9px','20px','none')},t:()=>{dt2('block','9px')},x:()=>{sw2('none');ag2('none')}}
+  ];setTimeout(()=>{ms[mi].b();ms[mi].e();ms[mi].m();ms[mi].t();ms[mi].x()},20)
+}
+function bl2(v){const e=document.getElementById('browL');if(e)e.style.transform='rotate('+v+')'}
+function br2(v){const e=document.getElementById('browR');if(e)e.style.transform='rotate('+v+')'}
+function el2(v){const e=document.getElementById('eyeL');if(e)e.style.height=v}
+function er2(v){const e=document.getElementById('eyeR');if(e)e.style.height=v}
+function hl2(v){const e=document.getElementById('heartL');if(e)e.style.display=v}
+function hr2(v){const e=document.getElementById('heartR');if(e)e.style.display=v}
+function dm2(r,b,h,w,tp){const e=document.getElementById('dogMouth');if(e){e.style.borderRadius=r;if(b==='none')e.style.borderBottom='none';else e.style.borderBottom=b;e.style.height=h;e.style.width=w;if(tp)e.style.borderTop=tp;else e.style.borderTop='none'}}
+function dt2(d,h){const e=document.getElementById('dogTongue');if(e){e.style.display=d;e.style.height=h}}
+function sw2(d){const e=document.getElementById('sweat');if(e)e.style.display=d}
+function ag2(d){const e=document.getElementById('angry');if(e)e.style.display=d}
+
+function dA(wrap,ac){wrap.classList.remove('eating','jumping','spinning','nodding');void wrap.offsetWidth;wrap.classList.add(ac);setTimeout(()=>wrap.classList.remove(ac),ac==='nodding'?1800:1600)}
+
+function fH(c){
+  switch(c){
+    case'dad':return'<div class="dad-fig"><div class="body"><div class="badge"></div></div><div class="head"><div class="police-hat"></div><div class="horn l"></div><div class="horn r"></div><div class="face"><div class="eyes"><div class="eye"></div><div class="eye"></div></div><div class="snout"></div><div class="blush l"></div><div class="blush r"></div></div><div class="cup">🍶</div></div></div>';
+    case'mom':return'<div class="mom-fig"><div class="body"></div><div class="head"><div class="glasses"></div><div class="eyes"><div class="eye"></div><div class="eye"></div></div><div class="nose"></div><div class="mouth"></div><div class="bun"></div><span class="note">🎵</span><div class="blush l"></div><div class="blush r"></div></div><span class="book">📖</span></div>';
+    case'bro':return'<div class="bro-fig"><div class="body"></div><div class="head"><div class="ear l"></div><div class="ear r"></div><div class="headphones"></div><div class="glasses"></div><div class="eyes"><div class="eye"></div><div class="eye"></div></div><div class="mouth"></div><div class="blush l"></div><div class="blush r"></div></div><span class="ball">🏀</span></div>';
+    case'aunt':return'<div class="aunt-fig"><div class="body"><div class="stripe s1"></div><div class="stripe s2"></div><div class="stripe s3"></div></div><div class="head"><div class="ear l"></div><div class="ear r"></div><div class="nurse-cap"></div><div class="eyes"><div class="eye"></div><div class="eye"></div></div><div class="nose"></div><div class="mouth"></div><div class="blush l"></div><div class="blush r"></div></div></div>';
+    case'grandma':return'<div class="gm-fig"><div class="body"></div><div class="head"><div class="mane"></div><div class="eyes"><div class="eye"></div><div class="eye"></div></div><div class="snout"><div class="nostril l"></div><div class="nostril r"></div></div><div class="mouth"></div><div class="blush l"></div><div class="blush r"></div><span class="live"></span></div><div class="phone"></div></div>';
+    case'me':return'<div class="me-fig"><div class="db"><div class="dl"></div></div><div class="dh"><div class="de l"></div><div class="de r"></div><div class="df"><div class="d-brows"><div class="d-brow" id="browL"></div><div class="d-brow" id="browR"></div></div><div class="d-eyes"><div class="d-eye" id="eyeL"></div><div class="d-eye" id="eyeR"></div></div><span class="d-hearts l" id="heartL">💕</span><span class="d-hearts r" id="heartR">💕</span><div class="d-nose"></div><div class="d-mouth" id="dogMouth"></div><div class="d-tongue" id="dogTongue"></div><div class="d-cheek l"></div><div class="d-cheek r"></div></div><span class="d-sweat" id="sweat">💧</span><span class="d-angry" id="angry">💢</span></div><div class="d-sauce"></div><div class="d-paw l"></div><div class="d-paw r"></div><span class="kuaiban">🪘</span></div>';
+  }
+}
+
+const cp=document.getElementById('charPage');
+function rCP(c){
+  const cf=cfg[c];let h='<div class="char-page show"><div class="figure-stage" id="figStage"><div class="figure-wrap" id="figWrap">'+fH(c)+'</div></div><div class="char-name-big">'+cf.name+'</div><div class="char-mood" id="moodLabel">'+cf.moods[0]+'</div><div class="char-talk" id="talkEl">'+talks[c][0]+'</div><div class="char-btns">';
+  cf.btns.forEach((b,i)=>{h+='<button class="cbtn" style="background:linear-gradient(135deg,'+cf.cl[i%cf.cl.length]+','+L(cf.cl[i%cf.cl.length])+')" data-idx="'+i+'">'+b.e+' '+b.t+'</button>'});
+  h+='</div></div>';cp.innerHTML=h;
+  const st=document.getElementById('figStage'),wr=document.getElementById('figWrap');
+  if(st)md(st);
+  cp.querySelectorAll('.cbtn').forEach(btn=>{btn.addEventListener('click',function(e){e.stopPropagation();const idx=parseInt(this.dataset.idx);const b=cf.btns[idx];const r=this.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top;P(cx,cy,b.n,b.p);aH();aG(b.e);if(wr)dA(wr,cf.ac);const mi=Math.floor(Math.random()*cf.moods.length);const ml=document.getElementById('moodLabel');if(ml)ml.textContent=cf.moods[mi];const te=document.getElementById('talkEl');if(te)te.textContent=talks[c][Math.floor(Math.random()*talks[c].length)];if(c==='me')sDM(mi)})});
+  if(st){st.addEventListener('click',function(e){if(st._dr){st._dr=false;return}e.stopPropagation();cs[c]++;const mi=cs[c]%cf.moods.length;const ml=document.getElementById('moodLabel');if(ml)ml.textContent=cf.moods[mi];const te=document.getElementById('talkEl');if(te)te.textContent=talks[c][Math.floor(Math.random()*talks[c].length)];if(c==='me')sDM(mi);else{const r=st.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top;P(cx,cy,16,['✨','💕','🌟','🎉'])}if(wr)dA(wr,cf.ac);aH()})}
+  cid=c;if(c==='me')setTimeout(()=>sDM(0),50)
+}
+function L(h){const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return'rgb('+Math.min(255,r+90)+','+Math.min(255,g+90)+','+Math.min(255,b+90)+')'}
+
+function sC(c){
+  document.querySelectorAll('.nav-card').forEach(x=>x.classList.remove('sel'));
+  document.getElementById('nav'+c.charAt(0).toUpperCase()+c.slice(1)).classList.add('sel');
+  rCP(c)
+}
+document.querySelectorAll('.nav-card').forEach(cd=>{cd.addEventListener('click',function(e){e.stopPropagation();sC(this.dataset.char)})});
+
+sC('me');
+document.addEventListener('click',function(e){if(e.target.closest('.nav-card')||e.target.closest('.cbtn')||e.target.closest('.figure-stage')||e.target.closest('#musicBtn'))return;P(e.clientX,e.clientY,3)});
+setInterval(()=>{if(cid==='me'&&Math.random()<.15)sDM(Math.random()<.5?0:2)},25000);
+</script>
+</body>
+</html>
