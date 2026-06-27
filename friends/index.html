@@ -6,81 +6,102 @@
 <title>天津站之九子夺嫡</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}html{height:100%}
-body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;-webkit-tap-highlight-color:transparent}
+body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;-webkit-tap-highlight-color:transparent;user-select:none}
 .bg-dots{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
-.bg-dot{position:absolute;border-radius:50%;animation:bgDrift linear infinite;opacity:.4}
+.bg-dot{position:absolute;border-radius:50%;animation:bgDrift linear infinite;opacity:.35}
 @keyframes bgDrift{0%{transform:translateY(105vh) rotate(0)}100%{transform:translateY(-10vh) rotate(360deg)}}
-.app{position:relative;z-index:1;max-width:460px;width:95%;margin:0 auto;padding:12px 0 30px}
+.app{position:relative;z-index:1;max-width:460px;width:95%;margin:0 auto;padding:10px 0 30px}
 
-/* 语录横幅 */
-.quote-bar{background:linear-gradient(135deg,rgba(255,107,107,.15),rgba(255,217,61,.15),rgba(107,203,119,.15),rgba(77,150,255,.15));border-radius:14px;padding:10px 14px;margin-bottom:10px;text-align:center;animation:qbPulse 3s ease-in-out infinite;border:1px solid rgba(255,255,255,.06);cursor:pointer}
-@keyframes qbPulse{0%,100%{opacity:.85}50%{opacity:1}}
-.quote-bar .ql{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:3px;letter-spacing:2px}
-.quote-bar .qt{font-size:15px;color:#fff;font-weight:700;letter-spacing:1px;transition:all .3s}
+.quote-bar{background:linear-gradient(135deg,rgba(255,107,107,.15),rgba(255,217,61,.15),rgba(107,203,119,.15),rgba(77,150,255,.15));border-radius:14px;padding:10px 14px;margin-bottom:10px;text-align:center;border:1px solid rgba(255,255,255,.06);cursor:pointer}
+.quote-bar .ql{font-size:11px;color:rgba(255,255,255,.35);margin-bottom:2px;letter-spacing:2px}
+.quote-bar .qt{font-size:14px;color:#fff;font-weight:700;letter-spacing:1px;transition:all .2s}
 
-/* 模式切换 */
-.mode-tabs{display:flex;gap:6px;margin-bottom:10px}
-.mode-tab{flex:1;padding:10px 0;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(255,255,255,.5);font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit}
+.mode-tabs{display:flex;gap:5px;margin-bottom:10px}
+.mode-tab{flex:1;padding:9px 0;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(255,255,255,.5);font-size:12px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit}
 .mode-tab.sel{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)}
 
-/* 群聊面板 */
-.group-chat{display:none;background:rgba(255,255,255,.03);border-radius:18px;padding:12px;margin-bottom:10px;border:1px solid rgba(255,255,255,.06);max-height:350px;overflow-y:auto}
-.group-chat.show{display:block}
-.gc-msg{padding:8px 12px;margin-bottom:6px;border-radius:14px;font-size:13px;line-height:1.4;max-width:85%;animation:gcFade .3s ease-out;border-bottom-left-radius:2px}
-@keyframes gcFade{0%{transform:translateY(8px);opacity:0}100%{transform:translateY(0);opacity:1}}
-.gc-msg .gc-who{font-size:10px;color:inherit;opacity:.6;margin-bottom:2px}
-.gc-all-btn{display:block;width:100%;padding:12px;margin-top:8px;border-radius:16px;border:none;background:linear-gradient(135deg,rgba(255,82,82,.3),rgba(255,152,0,.3));color:#ff8a80;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:2px;font-family:inherit;transition:all .2s}
-.gc-all-btn:active{transform:scale(.94);background:rgba(255,82,82,.5)}
+/* 面板 */
+.panel{display:none;margin-bottom:10px}
+.panel.show{display:block}
 
 /* 角色列表 */
-.char-list{display:none;flex-direction:column;gap:8px}
-.char-list.show{display:flex}
-.char-card{background:rgba(255,255,255,.04);border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.06);position:relative;overflow:visible;-webkit-tap-highlight-color:transparent;animation:cardSlide .4s ease-out backwards}
+.char-list{display:flex;flex-direction:column;gap:7px}
+.char-card{background:rgba(255,255,255,.04);border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.06);-webkit-tap-highlight-color:transparent;animation:slideIn .35s ease-out backwards}
 .char-card:nth-child(1){animation-delay:0s}.char-card:nth-child(2){animation-delay:.04s}.char-card:nth-child(3){animation-delay:.08s}.char-card:nth-child(4){animation-delay:.12s}.char-card:nth-child(5){animation-delay:.16s}.char-card:nth-child(6){animation-delay:.2s}.char-card:nth-child(7){animation-delay:.24s}
-@keyframes cardSlide{0%{transform:translateX(-20px);opacity:0}100%{transform:translateX(0);opacity:1}}
-.char-card:active{transform:scale(.96);background:rgba(255,255,255,.1)}
-.char-card.nudged{animation:nudgeAnim .5s cubic-bezier(.34,1.56,.64,1)}
-@keyframes nudgeAnim{0%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}100%{transform:translateX(0)}}
-.char-card .av{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;box-shadow:0 3px 14px rgba(0,0,0,.3)}
+@keyframes slideIn{0%{transform:translateX(-20px);opacity:0}100%{transform:translateX(0);opacity:1}}
+.char-card:active{transform:scale(.96);background:rgba(255,255,255,.08)}
+.char-card .av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;box-shadow:0 3px 14px rgba(0,0,0,.3)}
 .char-card .info{flex:1;min-width:0}
-.char-card .nm{font-size:16px;font-weight:800;color:#fff;margin-bottom:2px}
-.char-card .nm .tag{font-size:10px;padding:2px 7px;border-radius:8px;margin-left:5px;font-weight:500}
+.char-card .nm{font-size:15px;font-weight:800;color:#fff}.char-card .nm span{font-size:10px;padding:2px 7px;border-radius:8px;margin-left:5px;font-weight:500}
 .char-card .lt{font-size:12px;color:rgba(255,255,255,.4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.char-card .nudge-hint{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:20px;opacity:0;transition:all .3s}
-.char-card.nudged .nudge-hint{opacity:1;animation:nudgePop .4s ease-out}
-@keyframes nudgePop{0%{transform:translateY(-50%) scale(0)}60%{transform:translateY(-50%) scale(1.4)}100%{transform:translateY(-50%) scale(1)}}
+
+/* 群聊 */
+.group-chat{max-height:360px;overflow-y:auto;background:rgba(255,255,255,.03);border-radius:18px;padding:12px;border:1px solid rgba(255,255,255,.06)}
+.gc-msg{padding:7px 11px;margin-bottom:5px;border-radius:14px;font-size:13px;max-width:82%;animation:msgIn .25s ease-out;border-bottom-left-radius:2px}
+@keyframes msgIn{0%{transform:translateY(6px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.gc-msg .who{font-size:10px;opacity:.55;margin-bottom:1px}
+.gc-all-btn{display:block;width:100%;padding:12px;margin-top:8px;border-radius:16px;border:none;background:linear-gradient(135deg,rgba(255,82,82,.3),rgba(255,152,0,.3));color:#ff8a80;font-size:14px;font-weight:800;cursor:pointer;letter-spacing:2px;font-family:inherit;transition:all .2s}
+.gc-all-btn:active{transform:scale(.94)}
 
 /* 朋友圈 */
-.moments{display:none;flex-direction:column;gap:10px;margin-bottom:10px}
-.moments.show{display:flex}
-.moment-card{background:rgba(255,255,255,.04);border-radius:18px;padding:14px;border:1px solid rgba(255,255,255,.06);animation:cardSlide .4s ease-out backwards}
-.moment-card .m-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.moment-card .m-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
-.moment-card .m-name{font-size:14px;font-weight:700;color:#fff}
-.moment-card .m-time{font-size:10px;color:rgba(255,255,255,.3)}
-.moment-card .m-text{font-size:14px;color:rgba(255,255,255,.75);line-height:1.5;margin-bottom:8px}
-.moment-card .m-actions{display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,.35)}
-.moment-card .m-actions span{cursor:pointer;transition:all .15s}
-.moment-card .m-actions span:active{color:#ff6b6b;transform:scale(1.1)}
+.moment-card{background:rgba(255,255,255,.04);border-radius:18px;padding:14px;border:1px solid rgba(255,255,255,.06);margin-bottom:8px;animation:slideIn .35s ease-out backwards}
+.moment-card .mh{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.moment-card .mav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px}
+.moment-card .mname{font-size:13px;font-weight:700;color:#fff}
+.moment-card .mtime{font-size:10px;color:rgba(255,255,255,.25)}
+.moment-card .mt{font-size:14px;color:rgba(255,255,255,.7);line-height:1.5;margin-bottom:6px}
+.moment-card .ma{display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,.3);cursor:pointer}
 
-/* 聊天弹窗 */
-.chat-popup{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(15,15,26,.98);backdrop-filter:blur(20px);border-radius:22px 22px 0 0;padding:16px;max-width:460px;margin:0 auto;display:none;animation:slideUp .3s ease-out;max-height:65vh;overflow-y:auto}
+/* ══════ 游戏区 ══════ */
+.game-tabs{display:flex;gap:4px;margin-bottom:10px}
+.gtab{flex:1;padding:7px 0;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(255,255,255,.45);font-size:11px;font-weight:600;cursor:pointer;text-align:center;font-family:inherit;transition:all .15s}
+.gtab.sel{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)}
+
+/* 打地鼠 */
+.whack-board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:320px;margin:0 auto}
+.whack-hole{aspect-ratio:1;border-radius:50%;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;font-size:44px;cursor:pointer;position:relative;overflow:hidden;border:3px solid rgba(255,255,255,.06);transition:all .1s}
+.whack-hole.active{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);transform:scale(1.05)}
+.whack-hole:active{transform:scale(.9)}
+.whack-score{text-align:center;font-size:22px;font-weight:900;color:#ffd93d;margin:10px 0;letter-spacing:2px}
+.whack-score span{font-size:13px;color:rgba(255,255,255,.4);font-weight:400}
+.whack-start{display:block;width:100%;padding:10px;border-radius:16px;border:none;background:linear-gradient(135deg,rgba(255,107,107,.4),rgba(255,152,0,.4));color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:2px;margin-top:10px}
+.whack-start:active{transform:scale(.94)}
+
+/* 转盘 */
+.wheel-wrap{text-align:center}
+.wheel-canvas{max-width:280px;width:100%;cursor:pointer;transition:transform .15s}
+.wheel-canvas:active{transform:scale(.95)}
+.wheel-result{font-size:16px;color:#fff;font-weight:700;margin-top:10px;padding:10px;background:rgba(255,255,255,.06);border-radius:12px;min-height:48px;display:flex;align-items:center;justify-content:center;text-align:center}
+
+/* 弹幕墙 */
+.danmaku-stage{height:280px;background:rgba(0,0,0,.3);border-radius:18px;position:relative;overflow:hidden;margin-bottom:8px;border:1px solid rgba(255,255,255,.06)}
+.danmaku-msg{position:absolute;white-space:nowrap;font-size:16px;font-weight:700;animation:dmFly 8s linear forwards;pointer-events:none;z-index:10}
+@keyframes dmFly{0%{transform:translateX(105%);opacity:1}85%{opacity:1}100%{transform:translateX(-120%);opacity:0}}
+.danmaku-input-row{display:flex;gap:6px}
+.danmaku-input{flex:1;padding:10px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#fff;font-size:13px;font-family:inherit;outline:none}
+.danmaku-send{padding:10px 18px;border-radius:20px;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.danmaku-send:active{transform:scale(.92)}
+.danmaku-presets{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.danmaku-presets button{padding:5px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-size:10px;cursor:pointer;font-family:inherit}
+.danmaku-presets button:active{background:rgba(255,255,255,.15);color:#fff}
+
+/* 私聊弹窗 */
+.chat-popup{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(15,15,26,.98);backdrop-filter:blur(20px);border-radius:22px 22px 0 0;padding:16px;max-width:460px;margin:0 auto;display:none;animation:cpUp .3s ease-out;max-height:65vh;overflow-y:auto}
 .chat-popup.show{display:block}
-@keyframes slideUp{0%{transform:translateY(100%)}100%{transform:translateY(0)}}
-.cp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+@keyframes cpUp{0%{transform:translateY(100%)}100%{transform:translateY(0)}}
+.cp-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .cp-name{font-size:18px;font-weight:800;color:#fff}
-.cp-close{width:30px;height:30px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:14px;cursor:pointer}
-.cp-msgs{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;max-height:240px;overflow-y:auto}
+.cp-x{width:30px;height:30px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:14px;cursor:pointer}
+.cp-msgs{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;max-height:220px;overflow-y:auto}
 .cp-msg{padding:9px 13px;border-radius:15px;font-size:13px;max-width:80%;line-height:1.4;animation:msgIn .25s ease-out;word-break:break-word}
-@keyframes msgIn{0%{transform:translateY(6px);opacity:0}100%{transform:translateY(0);opacity:1}}
 .cp-msg.them{align-self:flex-start;background:rgba(255,255,255,.08);color:#ddd;border-bottom-left-radius:3px}
 .cp-msg.me{align-self:flex-end;background:rgba(255,255,255,.16);color:#fff;border-bottom-right-radius:3px}
-.cp-input-row{display:flex;gap:6px}
-.cp-input{flex:1;padding:9px 12px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#fff;font-size:13px;font-family:inherit;outline:none}
+.cp-row{display:flex;gap:6px}
+.cp-in{flex:1;padding:9px 12px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#fff;font-size:13px;font-family:inherit;outline:none}
 .cp-send{width:36px;height:36px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:#fff;font-size:16px;cursor:pointer;flex-shrink:0}
 .cp-quick{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
-.cp-quick button{padding:6px 11px;border-radius:13px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:rgba(255,255,255,.6);font-size:11px;cursor:pointer;font-family:inherit;transition:all .12s}
-.cp-quick button:active{background:rgba(255,255,255,.18);color:#fff;transform:scale(.93)}
+.cp-quick button{padding:6px 11px;border-radius:13px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:rgba(255,255,255,.6);font-size:11px;cursor:pointer;font-family:inherit}
+.cp-quick button:active{background:rgba(255,255,255,.18);color:#fff}
 
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:499;background:rgba(0,0,0,.5);display:none}
 .overlay.show{display:block}
@@ -104,146 +125,163 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-f
 <button class="music-btn" id="musicBtn">🎵</button>
 
 <div class="app">
-  <!-- 语录横幅 -->
-  <div class="quote-bar" id="quoteBar" onclick="nextQuote()">
-    <div class="ql">📢 今日抽象语录</div>
-    <div class="qt" id="quoteText"></div>
-  </div>
+  <div class="quote-bar" id="quoteBar"><div class="ql">📢 今日抽象语录</div><div class="qt" id="quoteText"></div></div>
 
-  <!-- 模式切换 -->
   <div class="mode-tabs">
-    <button class="mode-tab sel" data-mode="list" id="tabList">👥 九子</button>
-    <button class="mode-tab" data-mode="group" id="tabGroup">💬 群聊</button>
-    <button class="mode-tab" data-mode="moments" id="tabMoments">📱 朋友圈</button>
-  </div>
-
-  <!-- 群聊 -->
-  <div class="group-chat" id="groupChat">
-    <div id="gcMsgs"></div>
-    <button class="gc-all-btn" id="gcAllBtn">📢 @全体成员</button>
+    <button class="mode-tab sel" data-panel="list">👥 九子</button>
+    <button class="mode-tab" data-panel="group">💬 群聊</button>
+    <button class="mode-tab" data-panel="moments">📱 朋友圈</button>
+    <button class="mode-tab" data-panel="games">🎮 游戏</button>
   </div>
 
   <!-- 角色列表 -->
-  <div class="char-list show" id="charList"></div>
+  <div class="panel show" id="panelList"><div class="char-list" id="charList"></div></div>
+
+  <!-- 群聊 -->
+  <div class="panel" id="panelGroup">
+    <div class="group-chat" id="groupChat">
+      <div id="gcMsgs"></div>
+      <button class="gc-all-btn" id="gcAllBtn">📢 @全体成员</button>
+    </div>
+  </div>
 
   <!-- 朋友圈 -->
-  <div class="moments" id="moments"></div>
+  <div class="panel" id="panelMoments"><div id="momentsContent"></div></div>
+
+  <!-- 游戏 -->
+  <div class="panel" id="panelGames">
+    <div class="game-tabs">
+      <button class="gtab sel" data-game="whack">🔨 打地鼠</button>
+      <button class="gtab" data-game="wheel">🎡 真心话大冒险</button>
+      <button class="gtab" data-game="danmaku">💬 弹幕墙</button>
+    </div>
+    <div id="gameWhack">
+      <div class="whack-score">得分：<b id="whackScore">0</b> <span>/ 时间：<b id="whackTime">30</b>s</span></div>
+      <div class="whack-board" id="whackBoard"></div>
+      <button class="whack-start" id="whackStart">🔨 开始打地鼠！</button>
+    </div>
+    <div id="gameWheel" style="display:none">
+      <div class="wheel-wrap">
+        <canvas class="wheel-canvas" id="wheelCanvas" width="280" height="280"></canvas>
+        <div class="wheel-result" id="wheelResult">👆 点转盘开始旋转</div>
+      </div>
+    </div>
+    <div id="gameDanmaku" style="display:none">
+      <div class="danmaku-stage" id="danmakuStage"></div>
+      <div class="danmaku-input-row">
+        <input class="danmaku-input" id="dmInput" placeholder="发条弹幕..." maxlength="40" autocomplete="off">
+        <button class="danmaku-send" id="dmSend">发射 🚀</button>
+      </div>
+      <div class="danmaku-presets" id="dmPresets"></div>
+    </div>
+  </div>
 </div>
 
 <script>
+// ══════ 数据 ══════
+const chars=[{id:'yanzi',name:'燕子',emoji:'🐋',tag:'出轨狂魔',c:'#448aff',lines:['老廖怎么天天跟我聊天','我都没时间出轨了','烦死了这老廖','什么时候能出轨啊'],replies:['哈哈哈哈','笑死，老廖太粘人了','你出轨谁啊到底','要不你出轨老廖算了'],quick:['老廖又来聊了？','出轨成功了没']},{id:'qinyi',name:'秦熠',emoji:'🪼',tag:'填志愿',c:'#aa00ff',lines:['新疆人吃饭了','这志愿填得我想死','新疆菜好吃啊','来新疆吃饭'],replies:['哈哈哈哈','新疆菜确实好吃','志愿慢慢填别急','来碗拉条子'],quick:['志愿填好了没','今天吃啥']},{id:'laodai',name:'老戴',emoji:'🐕',tag:'虚假学习',c:'#ff9100',lines:['我真开始学习了','手机怎么这么好玩','再玩五分钟就学','今天一定学'],replies:['哈哈哈哈我也是','别学了继续玩','五分钟过去了','手机确实好玩'],quick:['开始学习了吗','手机放下了没']},{id:'qiangzi',name:'强子',emoji:'🪳',tag:'宝妈',c:'#8d6e63',lines:['何云伟太萌了你们看看','我儿子今天又可爱了','何云伟会叫妈妈了','看我儿子照片！'],replies:['哈哈哈好可爱','何云伟确实萌','晒娃狂魔','发照片啊倒是'],quick:['何云伟今天干啥了','发张照片看看']},{id:'piaoyunli',name:'飘云里',emoji:'🐰',tag:'金鱼杀手',c:'#00bfa5',lines:['沈明珠屋内不许荡秋千','我的金鱼怎么不动了','它应该是睡着了吧','我的金鱼还活着吧'],replies:['哈哈哈哈金鱼都臭了','醒醒金鱼死了','沈明珠又荡秋千了','金鱼：我已经死了三天了'],quick:['金鱼还好吗','沈明珠在哪']},{id:'naima',name:'奶妈',emoji:'🐱',tag:'追老师',c:'#ff5252',lines:['英语老师今天穿得好好看','我要追到英语老师','英语老师冲我笑了！','为了英语老师我要好好学英语'],replies:['冲！','英语老师危','追到了吗','祝你成功'],quick:['追到了没','英语老师今天啥样']},{id:'luzhilian',name:'陆智联',emoji:'🧑',tag:'求资源',c:'#ffab00',lines:['谁有网站','我要视频','有没有网站发一下','兄弟们来点资源'],replies:['没有','百度一下','正经点行不行','哈哈哈哈哈哈'],quick:['找到网站了吗','正经点']}];
+const gcNames=['燕子🦋','秦熠🪼','老戴🐕','强子🪳','飘云里🐰','奶妈🐱','陆智联🧑'];
+const gcColors=['#82b1ff','#ea80fc','#ffab40','#bcaaa4','#64ffda','#ff8a80','#ffff00'];
+const quotes=['老廖怎么天天跟我聊天啊——燕子','手机怎么这么好玩——老戴','沈明珠屋内不许荡秋千！！——飘云里','何云伟会叫妈妈了！！——强子','新疆人吃饭了！！——秦熠','英语老师冲我笑了！！——奶妈','谁有网站我要视频——陆智联'];
+
+// ══════ 背景 + Toast ══════
 (function(){const bg=document.getElementById('bgDots'),cl=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff922b','#cc5de8','#20c997'];for(let i=0;i<20;i++){const d=document.createElement('div');d.className='bg-dot';d.style.width=(3+Math.random()*6)+'px';d.style.height=d.style.width;d.style.background=cl[Math.floor(Math.random()*cl.length)];d.style.left=Math.random()*95+'%';d.style.animationDuration=(10+Math.random()*20)+'s';d.style.animationDelay=Math.random()*10+'s';bg.appendChild(d)}})();
 const toast=document.getElementById('toast');let tt;
 function T(t){clearTimeout(tt);toast.textContent=t;toast.classList.remove('show');void toast.offsetWidth;toast.classList.add('show');tt=setTimeout(()=>toast.classList.remove('show'),1700)}
 
-const chars=[
-  {id:'yanzi',name:'燕子',emoji:'🐋',tag:'出轨狂魔',c:'#448aff',lines:['老廖怎么天天跟我聊天','我都没时间出轨了','烦死了这老廖','什么时候能出轨啊','今天老廖又找我聊了','出轨计划又泡汤了'],replies:['哈哈哈哈','笑死，老廖太粘人了','你出轨谁啊到底','要不你出轨老廖算了','哈哈哈哈哈哈','我服了'],quick:['老廖又来聊了？','出轨成功了没']},
-  {id:'qinyi',name:'秦熠',emoji:'🪼',tag:'填志愿',c:'#aa00ff',lines:['新疆人吃饭了','这志愿填得我想死','新疆菜好吃啊','来新疆吃饭','填志愿比高考还难','我妈又问我志愿了烦死了'],replies:['哈哈哈哈','新疆菜确实好吃','志愿慢慢填别急','来碗拉条子','新疆大盘鸡yyds','笑死了'],quick:['志愿填好了没','今天吃啥']},
-  {id:'laodai',name:'老戴',emoji:'🐕',tag:'虚假学习',c:'#ff9100',lines:['我真开始学习了','手机怎么这么好玩','再玩五分钟就学','今天一定学','学习计划又泡汤了','不是我不想学是手机先动手的'],replies:['哈哈哈哈我也是','别学了继续玩','五分钟过去了','手机确实好玩','学个屁一起玩','笑死根本学不进去'],quick:['开始学习了吗','手机放下了没']},
-  {id:'qiangzi',name:'强子',emoji:'🪳',tag:'宝妈',c:'#8d6e63',lines:['何云伟太萌了你们看看','我儿子今天又可爱了','何云伟会叫妈妈了','看我儿子照片！','当妈太幸福了','何云伟今天拉粑粑了开心'],replies:['哈哈哈好可爱','何云伟确实萌','晒娃狂魔','发照片啊倒是','我也想rua','可爱！！'],quick:['何云伟今天干啥了','发张照片看看']},
-  {id:'piaoyunli',name:'飘云里',emoji:'🐰',tag:'金鱼杀手',c:'#00bfa5',lines:['沈明珠屋内不许荡秋千','我的金鱼怎么不动了','它应该是睡着了吧','我的金鱼还活着吧','沈明珠你又荡秋千！','金鱼今天也没动但它一定活着'],replies:['哈哈哈哈金鱼都臭了','醒醒金鱼死了','沈明珠又荡秋千了','金鱼：我已经死了三天了','笑死','秋千达人沈明珠'],quick:['金鱼还好吗','沈明珠在哪']},
-  {id:'naima',name:'奶妈',emoji:'🐱',tag:'追老师',c:'#ff5252',lines:['英语老师今天穿得好好看','我要追到英语老师','英语老师冲我笑了！','为了英语老师我要好好学英语','今天又去办公室找英语老师了','英语老师yyds'],replies:['冲！','英语老师危','追到了吗','祝你成功','哈哈哈哈加油','师生恋可以啊'],quick:['追到了没','英语老师今天啥样']},
-  {id:'luzhilian',name:'陆智联',emoji:'🧑',tag:'求资源',c:'#ffab00',lines:['谁有网站','我要视频','有没有网站发一下','兄弟们来点资源','最近有没有新网站','谁分享个网站啊'],replies:['没有','百度一下','正经点行不行','哈哈哈哈哈哈','你收敛一点','别搞了'],quick:['找到网站了吗','正经点']}
-];
+// ══════ 语录 ══════
+let qi=0;document.getElementById('quoteText').textContent=quotes[0];
+document.getElementById('quoteBar').addEventListener('click',()=>{qi=(qi+1)%quotes.length;document.getElementById('quoteText').textContent=quotes[qi];const b=document.getElementById('quoteBar');b.style.transform='scale(.96)';setTimeout(()=>b.style.transform='scale(1)',150)});
 
-// 语录
-const quotes=['老廖怎么天天跟我聊天啊——燕子','手机怎么这么好玩——老戴','沈明珠屋内不许荡秋千！！——飘云里','何云伟会叫妈妈了！！——强子','新疆人吃饭了！！——秦熠','英语老师冲我笑了！！——奶妈','谁有网站我要视频——陆智联'];
-let qi=0;
-function nextQuote(){qi=(qi+1)%quotes.length;document.getElementById('quoteText').textContent=quotes[qi];const b=document.getElementById('quoteBar');b.style.transform='scale(.96)';setTimeout(()=>b.style.transform='scale(1)',150)}
-document.getElementById('quoteText').textContent=quotes[0];
-
-// 模式切换
-const tabList=document.getElementById('tabList'),tabGroup=document.getElementById('tabGroup'),tabMoments=document.getElementById('tabMoments');
-const charList=document.getElementById('charList'),groupChat=document.getElementById('groupChat'),moments=document.getElementById('moments');
+// ══════ 模式切换 ══════
 let mode='list';
-function setMode(m){
-  mode=m;tabList.classList.toggle('sel',m==='list');tabGroup.classList.toggle('sel',m==='group');tabMoments.classList.toggle('sel',m==='moments');
-  charList.classList.toggle('show',m==='list');groupChat.classList.toggle('show',m==='group');moments.classList.toggle('show',m==='moments');
-  if(m==='moments')renderMoments();
-}
-tabList.addEventListener('click',()=>setMode('list'));tabGroup.addEventListener('click',()=>setMode('group'));tabMoments.addEventListener('click',()=>setMode('moments'));
+document.querySelectorAll('.mode-tab').forEach(t=>{t.addEventListener('click',()=>{mode=t.dataset.panel;document.querySelectorAll('.mode-tab').forEach(x=>x.classList.remove('sel'));t.classList.add('sel');document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));document.getElementById('panel'+mode.charAt(0).toUpperCase()+mode.slice(1)).classList.add('show');if(mode==='moments')renderMoments();if(mode==='group')chaosGC()})});
 
-// 渲染角色列表
+// ══════ 角色列表 ══════
+const charList=document.getElementById('charList');
 chars.forEach((c,i)=>{
-  const card=document.createElement('div');card.className='char-card';card.id='card'+c.id;
-  card.innerHTML='<div class="av" style="background:linear-gradient(135deg,'+c.c+','+c.c+'88)">'+c.emoji+'</div><div class="info"><div class="nm">'+c.name+'<span class="tag" style="background:'+c.c+'33;color:'+c.c+'">'+c.tag+'</span></div><div class="lt">'+c.lines[Math.floor(Math.random()*c.lines.length)]+'</div></div><div class="nudge-hint">👋</div>';
-  card.addEventListener('click',function(e){
-    // 双击=拍一拍
-    if(card._lastTap&&Date.now()-card._lastTap<400){nudgeChar(c,card);card._lastTap=0;return}
-    card._lastTap=Date.now();setTimeout(()=>{if(card._lastTap&&Date.now()-card._lastTap>400)openChat(c,card)},420);
-  });
+  const card=document.createElement('div');card.className='char-card';
+  card.innerHTML='<div class="av" style="background:linear-gradient(135deg,'+c.c+','+c.c+'88)">'+c.emoji+'</div><div class="info"><div class="nm">'+c.name+'<span style="background:'+c.c+'33;color:'+c.c+'">'+c.tag+'</span></div><div class="lt">'+c.lines[Math.floor(Math.random()*c.lines.length)]+'</div></div>';
+  card.addEventListener('click',function(){if(card._t&&Date.now()-card._t<400){T('👋 拍了拍 '+c.name+'：'+c.lines[Math.floor(Math.random()*c.lines.length)]);card.style.transform='translateX(-6px)';setTimeout(()=>card.style.transform='',100);card._t=0;return}card._t=Date.now();setTimeout(()=>{if(card._t&&Date.now()-card._t>400)openChat(c)},420)});
   charList.appendChild(card);
 });
 
-// 拍一拍
-function nudgeChar(c,card){
-  card.classList.add('nudged');setTimeout(()=>card.classList.remove('nudged'),500);
-  T('👋 你拍了拍 '+c.name+'：'+c.lines[Math.floor(Math.random()*c.lines.length)]);
-}
-
-// 群聊
+// ══════ 群聊 ══════
 const gcMsgs=document.getElementById('gcMsgs');
-const gcColors=['#82b1ff','#ea80fc','#ffab40','#bcaaa4','#64ffda','#ff8a80','#ffff00'];
-const gcNames=['燕子🦋','秦熠🪼','老戴🐕','强子🪳','飘云里🐰','奶妈🐱','陆智联🧑'];
-function addGcMsg(i,text){const d=document.createElement('div');d.className='gc-msg';d.style.background=gcColors[i]+'18';d.style.color=gcColors[i];d.innerHTML='<div class="gc-who">'+gcNames[i]+'</div>'+text;gcMsgs.appendChild(d);gcMsgs.scrollTop=gcMsgs.scrollHeight}
-function chaosGC(){
-  gcMsgs.innerHTML='';const n=5+Math.floor(Math.random()*8);
-  for(let j=0;j<n;j++){const ci=Math.floor(Math.random()*chars.length);setTimeout(()=>addGcMsg(ci,chars[ci].lines[Math.floor(Math.random()*chars[ci].lines.length)]),j*(300+Math.random()*600))}
-}
-function allMembers(){
-  addGcMsg(Math.floor(Math.random()*7),'@全体成员 出来！！！');
-  const ids=shuffleArr([0,1,2,3,4,5,6]);
-  ids.forEach((i,idx)=>{setTimeout(()=>addGcMsg(i,chars[i].replies[Math.floor(Math.random()*chars[i].replies.length)]),400+idx*(350+Math.random()*500))});
-}
-function shuffleArr(a){return a.sort(()=>Math.random()-.5)}
+function addGcMsg(i,text){const d=document.createElement('div');d.className='gc-msg';d.style.background=gcColors[i]+'18';d.style.color=gcColors[i];d.innerHTML='<div class="who">'+gcNames[i]+'</div>'+text;gcMsgs.appendChild(d);gcMsgs.scrollTop=gcMsgs.scrollHeight}
+function chaosGC(){gcMsgs.innerHTML='';const n=5+Math.floor(Math.random()*6);for(let j=0;j<n;j++){const ci=Math.floor(Math.random()*7);setTimeout(()=>addGcMsg(ci,chars[ci].lines[Math.floor(Math.random()*chars[ci].lines.length)]),j*(250+Math.random()*500))}}
+function allMembers(){addGcMsg(Math.floor(Math.random()*7),'@全体成员 出来！！！');const ids=[0,1,2,3,4,5,6].sort(()=>Math.random()-.5);ids.forEach((i,idx)=>{setTimeout(()=>addGcMsg(i,chars[i].replies[Math.floor(Math.random()*chars[i].replies.length)]),300+idx*(300+Math.random()*400))})}
 chaosGC();
 document.getElementById('gcAllBtn').addEventListener('click',allMembers);
+setInterval(()=>{if(mode==='group'&&Math.random()<.22){const ci=Math.floor(Math.random()*7);addGcMsg(ci,chars[ci].lines[Math.floor(Math.random()*chars[ci].lines.length)])}},4000);
 
-// 刷新群聊
-setInterval(()=>{if(mode==='group'){if(Math.random()<.25){const ci=Math.floor(Math.random()*7);addGcMsg(ci,chars[ci].lines[Math.floor(Math.random()*chars[ci].lines.length)])}}},4000);
-
-// 朋友圈
+// ══════ 朋友圈 ══════
 function renderMoments(){
-  const mm=document.getElementById('moments');mm.innerHTML='';
-  const posts=[
-    {ci:0,text:'老廖又来找我聊天了，我真的服了，出轨大业又搁置了一天🙄',likes:23,comments:5},
-    {ci:1,text:'新疆人吃饭了！！（配图：大盘鸡）🍗',likes:41,comments:12},
-    {ci:2,text:'今天我真开始学习了（配图：手机屏幕）📱',likes:35,comments:8},
-    {ci:4,text:'沈明珠！！屋内不许荡秋千！！说了多少次了！！😡',likes:56,comments:15},
-    {ci:5,text:'英语老师今天穿了件白衬衫，太好看了我要死了😭💕',likes:18,comments:6},
-    {ci:3,text:'何云伟今天会叫妈妈了！！老母亲落泪😭😭😭',likes:67,comments:22},
-    {ci:6,text:'谁有网站啊我要视频，兄弟们帮帮忙',likes:0,comments:3},
-    {ci:0,text:'我感觉我出轨的机会来了，老廖今天没找我！！激动',likes:31,comments:9},
-    {ci:2,text:'手机真的太好玩了，我宣布今天不学了😂',likes:44,comments:11},
-    {ci:4,text:'我的金鱼还活着，它只是睡着了，一定是这样🐟',likes:29,comments:14}
-  ];
-  shuffleArr(posts).slice(0,6).forEach((p,i)=>{
-    const c=chars[p.ci];const d=document.createElement('div');d.className='moment-card';d.style.animationDelay=(i*.06)+'s';
-    d.innerHTML='<div class="m-header"><div class="m-av" style="background:'+c.c+'33">'+c.emoji+'</div><div><div class="m-name">'+c.name+'</div><div class="m-time">'+(3+Math.floor(Math.random()*55))+'分钟前</div></div></div><div class="m-text">'+p.text+'</div><div class="m-actions"><span>❤️ '+p.likes+'</span><span>💬 '+p.comments+'</span><span>😆</span></div>';
-    mm.appendChild(d);
-  });
+  const mm=document.getElementById('momentsContent'),posts=[{ci:0,text:'老廖又来找我聊天了，我真的服了，出轨大业又搁置了一天🙄',l:23,c:5},{ci:1,text:'新疆人吃饭了！！（配图：大盘鸡）🍗',l:41,c:12},{ci:2,text:'今天我真开始学习了（配图：手机屏幕）📱',l:35,c:8},{ci:4,text:'沈明珠！！屋内不许荡秋千！！说了多少次了！！😡',l:56,c:15},{ci:5,text:'英语老师今天穿了件白衬衫，太好看了我要死了😭💕',l:18,c:6},{ci:3,text:'何云伟今天会叫妈妈了！！老母亲落泪😭😭😭',l:67,c:22},{ci:6,text:'谁有网站啊我要视频，兄弟们帮帮忙',l:0,c:3},{ci:0,text:'我感觉我出轨的机会来了，老廖今天没找我！！激动',l:31,c:9},{ci:2,text:'手机真的太好玩了，我宣布今天不学了😂',l:44,c:11},{ci:4,text:'我的金鱼还活着，它只是睡着了，一定是这样🐟',l:29,c:14}];
+  mm.innerHTML=posts.sort(()=>Math.random()-.5).slice(0,6).map((p,i)=>{const c=chars[p.ci];return'<div class="moment-card" style="animation-delay:'+(i*.06)+'s"><div class="mh"><div class="mav" style="background:'+c.c+'33">'+c.emoji+'</div><div><div class="mname">'+c.name+'</div><div class="mtime">'+(3+Math.floor(Math.random()*55))+'分钟前</div></div></div><div class="mt">'+p.text+'</div><div class="ma"><span>❤️ '+p.l+'</span><span>💬 '+p.c+'</span><span>😆</span></div></div>'}).join('');
 }
 
-// 聊天弹窗
+// ══════ 私聊 ══════
 const chatPopup=document.getElementById('chatPopup'),overlay=document.getElementById('overlay');
-function openChat(c,card){
-  card.classList.add('nudged');setTimeout(()=>card.classList.remove('nudged'),500);
-  chatPopup.innerHTML='<div class="cp-header"><span class="cp-name">'+c.emoji+' '+c.name+'</span><button class="cp-close" onclick="closeChat()">✕</button></div><div class="cp-msgs" id="cpMsgs"><div class="cp-msg them">'+c.lines[Math.floor(Math.random()*c.lines.length)]+'</div></div><div class="cp-input-row"><input class="cp-input" id="cpInput" placeholder="跟'+c.name+'说点什么..." maxlength="200" autocomplete="off"><button class="cp-send" id="cpSend">➤</button></div><div class="cp-quick" id="cpQuick"></div>';
-  const cq=document.getElementById('cpQuick');c.quick.forEach(q=>{const b=document.createElement('button');b.textContent=q;b.addEventListener('click',()=>{addMsg(q,'me');setTimeout(()=>autoReply(c),400+Math.random()*600)});cq.appendChild(b)});
-  chatPopup.classList.add('show');overlay.classList.add('show');
-  document.getElementById('cpInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();sendMsg(c)}});
-  document.getElementById('cpSend').addEventListener('click',()=>sendMsg(c));document.getElementById('cpInput').focus();
-}
-function sendMsg(c){const inp=document.getElementById('cpInput');if(!inp||!inp.value.trim())return;addMsg(inp.value,'me');inp.value='';setTimeout(()=>autoReply(c),400+Math.random()*700)}
-function addMsg(text,who){const msgs=document.getElementById('cpMsgs');if(!msgs)return;const d=document.createElement('div');d.className='cp-msg '+who;d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight}
-function autoReply(c){addMsg(c.replies[Math.floor(Math.random()*c.replies.length)],'them');if(Math.random()<.3)setTimeout(()=>addMsg(c.lines[Math.floor(Math.random()*c.lines.length)],'them'),500+Math.random()*600)}
+function openChat(c){chatPopup.innerHTML='<div class="cp-h"><span class="cp-name">'+c.emoji+' '+c.name+'</span><button class="cp-x" onclick="closeChat()">✕</button></div><div class="cp-msgs" id="cpMsgs"><div class="cp-msg them">'+c.lines[Math.floor(Math.random()*c.lines.length)]+'</div></div><div class="cp-row"><input class="cp-in" id="cpInput" placeholder="跟'+c.name+'说点什么..." maxlength="200" autocomplete="off"><button class="cp-send" id="cpSend">➤</button></div><div class="cp-quick" id="cpQuick"></div>';const cq=document.getElementById('cpQuick');c.quick.forEach(q=>{const b=document.createElement('button');b.textContent=q;b.addEventListener('click',()=>{aM(q,'me');setTimeout(()=>aR(c),400+Math.random()*600)});cq.appendChild(b)});chatPopup.classList.add('show');overlay.classList.add('show');document.getElementById('cpInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();sM(c)}});document.getElementById('cpSend').addEventListener('click',()=>sM(c));document.getElementById('cpInput').focus()}
+function sM(c){const inp=document.getElementById('cpInput');if(!inp||!inp.value.trim())return;aM(inp.value,'me');inp.value='';setTimeout(()=>aR(c),400+Math.random()*700)}
+function aM(text,who){const msgs=document.getElementById('cpMsgs');if(!msgs)return;const d=document.createElement('div');d.className='cp-msg '+who;d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight}
+function aR(c){aM(c.replies[Math.floor(Math.random()*c.replies.length)],'them');if(Math.random()<.3)setTimeout(()=>aM(c.lines[Math.floor(Math.random()*c.lines.length)],'them'),500+Math.random()*600)}
 function closeChat(){chatPopup.classList.remove('show');overlay.classList.remove('show')}
 overlay.addEventListener('click',closeChat);
 
-// 搞笑音乐
-let ac=null,mo=false,mt2=null;
-const mel=[262,330,392,523,392,330,262,294,349,440,349,294,262,330,392,523,440,349,294,262,330,392,523,659,587,523,440,349,330,294,262],rhy=[180,180,200,200,180,180,220,180,180,200,180,180,220,160,160,180,160,160,200,180,180,180,180,200,160,160,180,160,160,220,280];
-function tM(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();mo=!mo;const b=document.getElementById('musicBtn');if(mo){b.textContent='🎶';b.classList.add('on');pN(0)}else{b.textContent='🎵';b.classList.remove('on');clearTimeout(mt2);if(ac.state==='running')ac.suspend()}}
-function pN(i){if(!mo)return;if(ac.state==='suspended')ac.resume();const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=mel[i%mel.length];g.gain.setValueAtTime(.025,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+rhy[i%rhy.length]/1000);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime);o.stop(ac.currentTime+rhy[i%rhy.length]/1000);mt2=setTimeout(()=>pN((i+1)%mel.length),rhy[i%rhy.length])}
+// ══════ 游戏：打地鼠 ══════
+let ws=0,wt=30,wTimer=null,moleTimer=null;
+const wBoard=document.getElementById('whackBoard'),wScore=document.getElementById('whackScore'),wTime=document.getElementById('whackTime'),wStart=document.getElementById('whackStart');
+for(let i=0;i<9;i++){const hole=document.createElement('div');hole.className='whack-hole';hole.textContent='🕳️';hole.addEventListener('click',()=>{if(hole.classList.contains('active')){hole.classList.remove('active');hole.textContent='💥';ws++;wScore.textContent=ws;setTimeout(()=>{hole.textContent='🕳️'},200)}});wBoard.appendChild(hole)}
+function popMole(){const holes=wBoard.querySelectorAll('.whack-hole');holes.forEach(h=>{h.classList.remove('active');h.textContent='🕳️'});const r=Math.floor(Math.random()*9);const h=holes[r];h.classList.add('active');h.textContent=chars[Math.floor(Math.random()*7)].emoji}
+function startWhack(){ws=0;wt=30;wScore.textContent='0';wTime.textContent='30';wStart.textContent='🔨 游戏中...';wStart.disabled=true;popMole();moleTimer=setInterval(popMole,800);wTimer=setInterval(()=>{wt--;wTime.textContent=wt;if(wt<=0){clearInterval(wTimer);clearInterval(moleTimer);wStart.textContent='🔨 再来一局！';wStart.disabled=false;wBoard.querySelectorAll('.whack-hole').forEach(h=>{h.classList.remove('active');h.textContent='🕳️'});T('⏰ 时间到！得分：'+ws)}},1000)}
+wStart.addEventListener('click',startWhack);
+
+// ══════ 游戏：真心话大冒险转盘 ══════
+const wheelCanvas=document.getElementById('wheelCanvas'),wheelResult=document.getElementById('wheelResult');
+const wheelItems=['🙈 真心话：上次哭是什么时候','😈 大冒险：学狗叫三声','🙈 真心话：暗恋过几个人','😈 大冒险：发一条尴尬自拍','🙈 真心话：最社死的一次经历','😈 大冒险：用夹子音说话一分钟','🙈 真心话：有没有偷看过别人手机','😈 大冒险：模仿对面的人','🙈 真心话：做过最离谱的梦','😈 大冒险：倒立十秒钟','🙈 真心话：最近一次撒谎是什么','😈 大冒险：给上一个聊天的人发表情包'];
+let wsAngle=0,wsSpinning=false;
+function drawWheel(angle){
+  const ctx=wheelCanvas.getContext('2d'),n=wheelItems.length,arc=2*Math.PI/n;
+  ctx.clearRect(0,0,280,280);
+  for(let i=0;i<n;i++){
+    ctx.beginPath();ctx.moveTo(140,140);ctx.arc(140,140,130,angle+i*arc,angle+(i+1)*arc);
+    ctx.fillStyle=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff922b','#cc5de8','#20c997','#ff5252','#ffab40','#448aff','#00bfa5','#ff8a80'][i];ctx.fill();
+    ctx.save();ctx.translate(140,140);ctx.rotate(angle+i*arc+arc/2);ctx.fillStyle='#fff';ctx.font='bold 10px "PingFang SC","Microsoft YaHei"';ctx.textAlign='center';ctx.fillText(wheelItems[i].slice(0,8)+'...',90,3);ctx.restore();
+  }
+  ctx.beginPath();ctx.arc(140,140,12,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();
+  ctx.beginPath();ctx.moveTo(140,20);ctx.lineTo(130,4);ctx.lineTo(150,4);ctx.closePath();ctx.fillStyle='#fff';ctx.fill();
+}
+drawWheel(0);
+wheelCanvas.addEventListener('click',()=>{
+  if(wsSpinning)return;wsSpinning=true;const spins=3+Math.floor(Math.random()*3);const target=Math.random()*2*Math.PI;const total=spins*2*Math.PI+target;const start=wsAngle;const dur=3000;const startT=Date.now();
+  function anim(){const elapsed=Date.now()-startT;const progress=Math.min(1,elapsed/dur);const ease=1-Math.pow(1-progress,3);wsAngle=start+total*ease;drawWheel(wsAngle);if(progress<1)requestAnimationFrame(anim);else{wsSpinning=false;const n=wheelItems.length,arc=2*Math.PI/n;const idx=Math.floor(((2*Math.PI-wsAngle%(2*Math.PI))%(2*Math.PI))/arc)%n;wheelResult.textContent=wheelItems[idx]}}
+  anim();
+});
+
+// ══════ 游戏：弹幕墙 ══════
+const dmStage=document.getElementById('danmakuStage'),dmInput=document.getElementById('dmInput');
+const dmPresets=['哈哈哈哈笑死','老廖呢？','何云伟最萌！！','沈明珠别荡秋千了','我真开始学习了','新疆人吃饭了！','英语老师yyds','谁有网站？？'];
+function sendDanmaku(text){
+  const m=document.createElement('div');m.className='danmaku-msg';m.textContent=text;
+  m.style.color=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff922b','#cc5de8','#20c997'][Math.floor(Math.random()*7)];
+  m.style.top=(10+Math.random()*(dmStage.clientHeight-40))+'px';m.style.fontSize=(14+Math.random()*12)+'px';
+  dmStage.appendChild(m);setTimeout(()=>m.remove(),8500);
+}
+function fireDanmaku(){const t=dmInput.value.trim();if(!t)return;sendDanmaku(t);dmInput.value='';dmInput.focus()}
+document.getElementById('dmSend').addEventListener('click',fireDanmaku);
+dmInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();fireDanmaku()}});
+const dmPresetRow=document.getElementById('dmPresets');dmPresets.forEach(p=>{const b=document.createElement('button');b.textContent=p;b.addEventListener('click',()=>sendDanmaku(p));dmPresetRow.appendChild(b)});
+
+// ══════ 游戏切换 ══════
+document.querySelectorAll('.gtab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.gtab').forEach(x=>x.classList.remove('sel'));t.classList.add('sel');const g=t.dataset.game;document.getElementById('gameWhack').style.display=g==='whack'?'block':'none';document.getElementById('gameWheel').style.display=g==='wheel'?'block':'none';document.getElementById('gameDanmaku').style.display=g==='danmaku'?'block':'none'})});
+
+// ══════ 音乐 ══════
+let ac=null,mo2=false,mt2=null;
+const mel=[262,330,392,523,392,330,262,294,349,440,349,294,262,330,392,523,440,349,294,262],rhy=[180,180,200,200,180,180,220,180,180,200,180,180,220,160,160,180,160,160,200,280];
+function tM(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();mo2=!mo2;const b=document.getElementById('musicBtn');if(mo2){b.textContent='🎶';b.classList.add('on');pN(0)}else{b.textContent='🎵';b.classList.remove('on');clearTimeout(mt2);if(ac.state==='running')ac.suspend()}}
+function pN(i){if(!mo2)return;if(ac.state==='suspended')ac.resume();const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=mel[i%mel.length];g.gain.setValueAtTime(.025,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+rhy[i%rhy.length]/1000);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime);o.stop(ac.currentTime+rhy[i%rhy.length]/1000);mt2=setTimeout(()=>pN((i+1)%mel.length),rhy[i%rhy.length])}
 document.getElementById('musicBtn').addEventListener('click',tM);
 </script>
 </body>
