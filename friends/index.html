@@ -8,32 +8,34 @@
 *{margin:0;padding:0;box-sizing:border-box}html{height:100%}
 body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;-webkit-tap-highlight-color:transparent;user-select:none}
 .bg-dots{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
-.bg-dot{position:absolute;border-radius:50%;animation:bgDrift linear infinite;opacity:.35}
+.bg-dot{position:absolute;border-radius:50%;animation:bgDrift linear infinite;opacity:.3}
 @keyframes bgDrift{0%{transform:translateY(105vh) rotate(0)}100%{transform:translateY(-10vh) rotate(360deg)}}
 .app{position:relative;z-index:1;max-width:460px;width:95%;margin:0 auto;padding:10px 0 30px}
 
-.quote-bar{background:linear-gradient(135deg,rgba(255,107,107,.15),rgba(255,217,61,.15),rgba(107,203,119,.15),rgba(77,150,255,.15));border-radius:14px;padding:10px 14px;margin-bottom:10px;text-align:center;border:1px solid rgba(255,255,255,.06);cursor:pointer}
-.quote-bar .ql{font-size:11px;color:rgba(255,255,255,.35);margin-bottom:2px;letter-spacing:2px}
-.quote-bar .qt{font-size:14px;color:#fff;font-weight:700;letter-spacing:1px;transition:all .2s}
+/* ══════ 卡通小人Live场景 ══════ */
+.live-scene{background:linear-gradient(180deg,rgba(255,107,107,.06),rgba(77,150,255,.06));border-radius:20px;padding:8px 4px 4px;margin-bottom:10px;border:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden;min-height:140px}
+.live-chars{display:flex;flex-wrap:wrap;justify-content:center;gap:1px;position:relative;z-index:2}
+.live-char{position:relative;cursor:pointer;transition:transform .2s;text-align:center;padding:6px 8px 2px;-webkit-tap-highlight-color:transparent}
+.live-char:active{transform:scale(.9)}
+.live-char .lc-emoji{font-size:42px;display:block;transition:all .3s;animation:lcIdle 3s ease-in-out infinite}
+.live-char:nth-child(2) .lc-emoji{animation-delay:.3s}.live-char:nth-child(3) .lc-emoji{animation-delay:.6s}.live-char:nth-child(4) .lc-emoji{animation-delay:.9s}.live-char:nth-child(5) .lc-emoji{animation-delay:1.2s}.live-char:nth-child(6) .lc-emoji{animation-delay:1.5s}.live-char:nth-child(7) .lc-emoji{animation-delay:1.8s}
+@keyframes lcIdle{0%,100%{transform:translateY(0)}30%{transform:translateY(-3px)}60%{transform:translateY(0)}}
+.live-char .lc-name{font-size:10px;color:rgba(255,255,255,.55);margin-top:1px;font-weight:600}
+.live-char.speaking .lc-emoji{animation:speakBounce .4s ease-in-out 2}
+@keyframes speakBounce{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-12px) scale(1.15)}}
+.speech-bubble{position:absolute;background:rgba(255,255,255,.95);color:#222;border-radius:14px;padding:7px 11px;font-size:12px;font-weight:600;max-width:200px;z-index:10;pointer-events:none;animation:bubFloat 3s ease-out forwards;box-shadow:0 4px 16px rgba(0,0,0,.3);word-break:break-word;line-height:1.4}
+@keyframes bubFloat{0%{opacity:0;transform:translateY(8px)}15%{opacity:1;transform:translateY(0)}80%{opacity:1;transform:translateY(-6px)}100%{opacity:0;transform:translateY(-18px)}}
+.speech-bubble::after{content:'';position:absolute;bottom:-6px;left:20px;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:6px solid rgba(255,255,255,.95)}
+.speech-bubble.reply{background:rgba(255,255,200,.95)}
+.speech-bubble.reply::after{border-top-color:rgba(255,255,200,.95)}
 
+/* ══════ 模式切换 ══════ */
 .mode-tabs{display:flex;gap:5px;margin-bottom:10px}
 .mode-tab{flex:1;padding:9px 0;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(255,255,255,.5);font-size:12px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit}
 .mode-tab.sel{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)}
 
-/* 面板 */
 .panel{display:none;margin-bottom:10px}
 .panel.show{display:block}
-
-/* 角色列表 */
-.char-list{display:flex;flex-direction:column;gap:7px}
-.char-card{background:rgba(255,255,255,.04);border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.06);-webkit-tap-highlight-color:transparent;animation:slideIn .35s ease-out backwards}
-.char-card:nth-child(1){animation-delay:0s}.char-card:nth-child(2){animation-delay:.04s}.char-card:nth-child(3){animation-delay:.08s}.char-card:nth-child(4){animation-delay:.12s}.char-card:nth-child(5){animation-delay:.16s}.char-card:nth-child(6){animation-delay:.2s}.char-card:nth-child(7){animation-delay:.24s}
-@keyframes slideIn{0%{transform:translateX(-20px);opacity:0}100%{transform:translateX(0);opacity:1}}
-.char-card:active{transform:scale(.96);background:rgba(255,255,255,.08)}
-.char-card .av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;box-shadow:0 3px 14px rgba(0,0,0,.3)}
-.char-card .info{flex:1;min-width:0}
-.char-card .nm{font-size:15px;font-weight:800;color:#fff}.char-card .nm span{font-size:10px;padding:2px 7px;border-radius:8px;margin-left:5px;font-weight:500}
-.char-card .lt{font-size:12px;color:rgba(255,255,255,.4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* 群聊 */
 .group-chat{max-height:360px;overflow-y:auto;background:rgba(255,255,255,.03);border-radius:18px;padding:12px;border:1px solid rgba(255,255,255,.06)}
@@ -45,48 +47,43 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-f
 
 /* 朋友圈 */
 .moment-card{background:rgba(255,255,255,.04);border-radius:18px;padding:14px;border:1px solid rgba(255,255,255,.06);margin-bottom:8px;animation:slideIn .35s ease-out backwards}
+@keyframes slideIn{0%{transform:translateX(-20px);opacity:0}100%{transform:translateX(0);opacity:1}}
 .moment-card .mh{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .moment-card .mav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px}
 .moment-card .mname{font-size:13px;font-weight:700;color:#fff}
 .moment-card .mtime{font-size:10px;color:rgba(255,255,255,.25)}
 .moment-card .mt{font-size:14px;color:rgba(255,255,255,.7);line-height:1.5;margin-bottom:6px}
-.moment-card .ma{display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,.3);cursor:pointer}
+.moment-card .ma{display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,.3)}
 
-/* ══════ 游戏区 ══════ */
+/* ══════ 游戏 ══════ */
 .game-tabs{display:flex;gap:4px;margin-bottom:10px}
 .gtab{flex:1;padding:7px 0;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(255,255,255,.45);font-size:11px;font-weight:600;cursor:pointer;text-align:center;font-family:inherit;transition:all .15s}
 .gtab.sel{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)}
 
-/* 打地鼠 */
 .whack-board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:320px;margin:0 auto}
-.whack-hole{aspect-ratio:1;border-radius:50%;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;font-size:44px;cursor:pointer;position:relative;overflow:hidden;border:3px solid rgba(255,255,255,.06);transition:all .1s}
+.whack-hole{aspect-ratio:1;border-radius:50%;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;font-size:44px;cursor:pointer;border:3px solid rgba(255,255,255,.06);transition:all .1s}
 .whack-hole.active{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);transform:scale(1.05)}
-.whack-hole:active{transform:scale(.9)}
-.whack-score{text-align:center;font-size:22px;font-weight:900;color:#ffd93d;margin:10px 0;letter-spacing:2px}
-.whack-score span{font-size:13px;color:rgba(255,255,255,.4);font-weight:400}
-.whack-start{display:block;width:100%;padding:10px;border-radius:16px;border:none;background:linear-gradient(135deg,rgba(255,107,107,.4),rgba(255,152,0,.4));color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:2px;margin-top:10px}
+.whack-hole:active{transform:scale(.85)}
+.whack-score{text-align:center;font-size:22px;font-weight:900;color:#ffd93d;margin:10px 0}
+.whack-start{display:block;width:100%;padding:10px;border-radius:16px;border:none;background:linear-gradient(135deg,rgba(255,107,107,.4),rgba(255,152,0,.4));color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:8px}
 .whack-start:active{transform:scale(.94)}
 
-/* 转盘 */
 .wheel-wrap{text-align:center}
-.wheel-canvas{max-width:280px;width:100%;cursor:pointer;transition:transform .15s}
+.wheel-canvas{max-width:280px;width:100%;cursor:pointer}
 .wheel-canvas:active{transform:scale(.95)}
 .wheel-result{font-size:16px;color:#fff;font-weight:700;margin-top:10px;padding:10px;background:rgba(255,255,255,.06);border-radius:12px;min-height:48px;display:flex;align-items:center;justify-content:center;text-align:center}
 
-/* 弹幕墙 */
 .danmaku-stage{height:280px;background:rgba(0,0,0,.3);border-radius:18px;position:relative;overflow:hidden;margin-bottom:8px;border:1px solid rgba(255,255,255,.06)}
 .danmaku-msg{position:absolute;white-space:nowrap;font-size:16px;font-weight:700;animation:dmFly 8s linear forwards;pointer-events:none;z-index:10}
 @keyframes dmFly{0%{transform:translateX(105%);opacity:1}85%{opacity:1}100%{transform:translateX(-120%);opacity:0}}
-.danmaku-input-row{display:flex;gap:6px}
-.danmaku-input{flex:1;padding:10px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#fff;font-size:13px;font-family:inherit;outline:none}
+.danmaku-row{display:flex;gap:6px}
+.danmaku-in{flex:1;padding:10px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#fff;font-size:13px;font-family:inherit;outline:none}
 .danmaku-send{padding:10px 18px;border-radius:20px;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
-.danmaku-send:active{transform:scale(.92)}
 .danmaku-presets{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
 .danmaku-presets button{padding:5px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-size:10px;cursor:pointer;font-family:inherit}
-.danmaku-presets button:active{background:rgba(255,255,255,.15);color:#fff}
 
 /* 私聊弹窗 */
-.chat-popup{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(15,15,26,.98);backdrop-filter:blur(20px);border-radius:22px 22px 0 0;padding:16px;max-width:460px;margin:0 auto;display:none;animation:cpUp .3s ease-out;max-height:65vh;overflow-y:auto}
+.chat-popup{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(15,15,26,.98);backdrop-filter:blur(20px);border-radius:22px 22px 0 0;padding:16px;max-width:460px;margin:0 auto;display:none;animation:cpUp .3s ease-out;max-height:70vh;overflow-y:auto}
 .chat-popup.show{display:block}
 @keyframes cpUp{0%{transform:translateY(100%)}100%{transform:translateY(0)}}
 .cp-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -101,7 +98,6 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-f
 .cp-send{width:36px;height:36px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:#fff;font-size:16px;cursor:pointer;flex-shrink:0}
 .cp-quick{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
 .cp-quick button{padding:6px 11px;border-radius:13px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:rgba(255,255,255,.6);font-size:11px;cursor:pointer;font-family:inherit}
-.cp-quick button:active{background:rgba(255,255,255,.18);color:#fff}
 
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:499;background:rgba(0,0,0,.5);display:none}
 .overlay.show{display:block}
@@ -114,6 +110,8 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-f
 .toast{position:fixed;top:44%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,.92);border-radius:16px;padding:16px 24px;font-size:16px;font-weight:700;color:#fff;z-index:600;pointer-events:none;text-align:center;max-width:82%}
 .toast.show{animation:tp 1.6s ease-out forwards}
 @keyframes tp{0%{transform:translate(-50%,-50%) scale(0)}10%{transform:translate(-50%,-50%) scale(1.1)}20%{transform:translate(-50%,-50%) scale(1)}65%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-50%) scale(.8);opacity:0}}
+
+@media(max-width:360px){.live-char .lc-emoji{font-size:34px}.live-char{padding:4px 5px 0px}}
 </style>
 </head>
 <body>
@@ -125,21 +123,21 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-f
 <button class="music-btn" id="musicBtn">🎵</button>
 
 <div class="app">
-  <div class="quote-bar" id="quoteBar"><div class="ql">📢 今日抽象语录</div><div class="qt" id="quoteText"></div></div>
-
-  <div class="mode-tabs">
-    <button class="mode-tab sel" data-panel="list">👥 九子</button>
-    <button class="mode-tab" data-panel="group">💬 群聊</button>
-    <button class="mode-tab" data-panel="moments">📱 朋友圈</button>
-    <button class="mode-tab" data-panel="games">🎮 游戏</button>
+  <!-- ══════ 卡通小人Live场景 ══════ -->
+  <div class="live-scene" id="liveScene">
+    <div class="live-chars" id="liveChars"></div>
   </div>
 
-  <!-- 角色列表 -->
-  <div class="panel show" id="panelList"><div class="char-list" id="charList"></div></div>
+  <!-- ══════ 模式切换 ══════ -->
+  <div class="mode-tabs">
+    <button class="mode-tab" data-panel="group">💬 群聊</button>
+    <button class="mode-tab" data-panel="moments">📱 朋友圈</button>
+    <button class="mode-tab sel" data-panel="games">🎮 游戏</button>
+  </div>
 
   <!-- 群聊 -->
   <div class="panel" id="panelGroup">
-    <div class="group-chat" id="groupChat">
+    <div class="group-chart">
       <div id="gcMsgs"></div>
       <button class="gc-all-btn" id="gcAllBtn">📢 @全体成员</button>
     </div>
@@ -149,14 +147,14 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-f
   <div class="panel" id="panelMoments"><div id="momentsContent"></div></div>
 
   <!-- 游戏 -->
-  <div class="panel" id="panelGames">
+  <div class="panel show" id="panelGames">
     <div class="game-tabs">
       <button class="gtab sel" data-game="whack">🔨 打地鼠</button>
       <button class="gtab" data-game="wheel">🎡 真心话大冒险</button>
       <button class="gtab" data-game="danmaku">💬 弹幕墙</button>
     </div>
     <div id="gameWhack">
-      <div class="whack-score">得分：<b id="whackScore">0</b> <span>/ 时间：<b id="whackTime">30</b>s</span></div>
+      <div class="whack-score">得分：<b id="whackScore">0</b> / 时间：<b id="whackTime">30</b>s</div>
       <div class="whack-board" id="whackBoard"></div>
       <button class="whack-start" id="whackStart">🔨 开始打地鼠！</button>
     </div>
@@ -168,9 +166,9 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-f
     </div>
     <div id="gameDanmaku" style="display:none">
       <div class="danmaku-stage" id="danmakuStage"></div>
-      <div class="danmaku-input-row">
-        <input class="danmaku-input" id="dmInput" placeholder="发条弹幕..." maxlength="40" autocomplete="off">
-        <button class="danmaku-send" id="dmSend">发射 🚀</button>
+      <div class="danmaku-row">
+        <input class="danmaku-in" id="dmInput" placeholder="发条弹幕..." maxlength="40" autocomplete="off">
+        <button class="danmaku-send" id="dmSend">🚀</button>
       </div>
       <div class="danmaku-presets" id="dmPresets"></div>
     </div>
@@ -179,100 +177,139 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-f
 
 <script>
 // ══════ 数据 ══════
-const chars=[{id:'yanzi',name:'燕子',emoji:'🐋',tag:'出轨狂魔',c:'#448aff',lines:['老廖怎么天天跟我聊天','我都没时间出轨了','烦死了这老廖','什么时候能出轨啊'],replies:['哈哈哈哈','笑死，老廖太粘人了','你出轨谁啊到底','要不你出轨老廖算了'],quick:['老廖又来聊了？','出轨成功了没']},{id:'qinyi',name:'秦熠',emoji:'🪼',tag:'填志愿',c:'#aa00ff',lines:['新疆人吃饭了','这志愿填得我想死','新疆菜好吃啊','来新疆吃饭'],replies:['哈哈哈哈','新疆菜确实好吃','志愿慢慢填别急','来碗拉条子'],quick:['志愿填好了没','今天吃啥']},{id:'laodai',name:'老戴',emoji:'🐕',tag:'虚假学习',c:'#ff9100',lines:['我真开始学习了','手机怎么这么好玩','再玩五分钟就学','今天一定学'],replies:['哈哈哈哈我也是','别学了继续玩','五分钟过去了','手机确实好玩'],quick:['开始学习了吗','手机放下了没']},{id:'qiangzi',name:'强子',emoji:'🪳',tag:'宝妈',c:'#8d6e63',lines:['何云伟太萌了你们看看','我儿子今天又可爱了','何云伟会叫妈妈了','看我儿子照片！'],replies:['哈哈哈好可爱','何云伟确实萌','晒娃狂魔','发照片啊倒是'],quick:['何云伟今天干啥了','发张照片看看']},{id:'piaoyunli',name:'飘云里',emoji:'🐰',tag:'金鱼杀手',c:'#00bfa5',lines:['沈明珠屋内不许荡秋千','我的金鱼怎么不动了','它应该是睡着了吧','我的金鱼还活着吧'],replies:['哈哈哈哈金鱼都臭了','醒醒金鱼死了','沈明珠又荡秋千了','金鱼：我已经死了三天了'],quick:['金鱼还好吗','沈明珠在哪']},{id:'naima',name:'奶妈',emoji:'🐱',tag:'追老师',c:'#ff5252',lines:['英语老师今天穿得好好看','我要追到英语老师','英语老师冲我笑了！','为了英语老师我要好好学英语'],replies:['冲！','英语老师危','追到了吗','祝你成功'],quick:['追到了没','英语老师今天啥样']},{id:'luzhilian',name:'陆智联',emoji:'🧑',tag:'求资源',c:'#ffab00',lines:['谁有网站','我要视频','有没有网站发一下','兄弟们来点资源'],replies:['没有','百度一下','正经点行不行','哈哈哈哈哈哈'],quick:['找到网站了吗','正经点']}];
-const gcNames=['燕子🦋','秦熠🪼','老戴🐕','强子🪳','飘云里🐰','奶妈🐱','陆智联🧑'];
+const chars=[{id:'yanzi',name:'燕子',emoji:'🐋',tag:'出轨狂魔',c:'#448aff',catchphrases:['老廖怎么天天跟我聊天','我都没时间出轨了','烦死了这老廖','什么时候能出轨啊','今天老廖又黏上我了','出轨计划无限延期'],personality:['恋爱脑','话多','容易烦'],mentions:['老廖','出轨']},{id:'qinyi',name:'秦熠',emoji:'🪼',tag:'填志愿',c:'#aa00ff',catchphrases:['新疆人吃饭了','这志愿填得我想死','新疆菜好吃啊','来新疆吃饭啊','填志愿比高考还离谱','我妈天天问我志愿'],personality:['吃货','纠结','想躺平'],mentions:['新疆','志愿','饭']},{id:'laodai',name:'老戴',emoji:'🐕',tag:'虚假学习',c:'#ff9100',catchphrases:['我真开始学习了','手机怎么这么好玩','再玩五分钟就学','今天一定学','不是我不想学是手机先动的手','明天一定开始'],personality:['拖延症','手机控','自我欺骗'],mentions:['学习','手机','五分钟']},{id:'qiangzi',name:'强子',emoji:'🪳',tag:'宝妈',c:'#8d6e63',catchphrases:['何云伟太萌了你们看看','我儿子今天又可爱了','何云伟会叫妈妈了','看我儿子照片','何云伟今天拉粑粑了开心','当妈太幸福了'],personality:['晒娃','幸福','话多'],mentions:['何云伟','儿子','可爱']},{id:'piaoyunli',name:'飘云里',emoji:'🐰',tag:'金鱼杀手',c:'#00bfa5',catchphrases:['沈明珠屋内不许荡秋千','我的金鱼怎么不动了','它应该是睡着了吧','我的金鱼一定还活着','沈明珠！！','今天金鱼也没动但它肯定活着'],personality:['执着','幻觉','管闲事'],mentions:['沈明珠','金鱼','秋千']},{id:'naima',name:'奶妈',emoji:'🐱',tag:'追老师',c:'#ff5252',catchphrases:['英语老师今天穿得好好看','我要追到英语老师','英语老师冲我笑了','为了英语老师我要好好学英语','今天又去办公室找英语老师了','英语老师看我了！！'],personality:['花痴','执着','自我感动'],mentions:['英语老师','好看','追']},{id:'luzhilian',name:'陆智联',emoji:'🧑',tag:'求资源',c:'#ffab00',catchphrases:['谁有网站','我要视频','有没有网站发一下','兄弟们来点资源','最近有没有新网站','分享一下啊兄弟们'],personality:['直接','执念','不管不顾'],mentions:['网站','视频','资源']}];
 const gcColors=['#82b1ff','#ea80fc','#ffab40','#bcaaa4','#64ffda','#ff8a80','#ffff00'];
-const quotes=['老廖怎么天天跟我聊天啊——燕子','手机怎么这么好玩——老戴','沈明珠屋内不许荡秋千！！——飘云里','何云伟会叫妈妈了！！——强子','新疆人吃饭了！！——秦熠','英语老师冲我笑了！！——奶妈','谁有网站我要视频——陆智联'];
+const gcNames=['燕子🦋','秦熠🪼','老戴🐕','强子🪳','飘云里🐰','奶妈🐱','陆智联🧑'];
 
-// ══════ 背景 + Toast ══════
+// ══════ 丰富回复系统 ══════
+// 每个角色有多种回复模板，结合上下文
+const replyBank={
+  yanzi:['笑死我了@name','哈哈哈哈@name你懂我','@name说得对！','老廖听了都摇头','@name我出轨带你一个','真的会谢哈哈哈哈','@name别说了笑死','老廖：你们在聊啥','我愿称@name为天津最懂','确实确实确实'],
+  qinyi:['新疆欢迎你@name','来吃大盘鸡@name','志愿填完了吗就在这聊','@name你志愿填哪了','哈哈哈新疆人表示赞同','@name来新疆我请你吃饭','填志愿太痛苦了别提了','拉条子了解一下@name'],
+  laodai:['@name别说了我先学五分钟','哈哈哈哈手机真好玩','@name一起玩手机啊学什么习','笑死根本学不进去','我发誓明天一定开始学','你看我像是学习的人吗','手机先放不下啊@name'],
+  qiangzi:['何云伟听了都鼓掌','@name你看看我儿子照片','何云伟说@name说得对','哈哈哈哈我儿子也觉得好笑','@name你以后肯定是个好爸爸','何云伟又拉粑粑了你看看'],
+  piaoyunli:['沈明珠！！不许荡秋千！！','我的金鱼动了！！它真的动了！！','@name你看见我金鱼了吗','沈明珠你听到没@name','金鱼只是睡着了你们别瞎说','@name你帮我去看看沈明珠在不在'],
+  naima:['英语老师今天也看我了','@name你觉得英语老师喜欢我吗','英语老师冲我笑了！！','@name帮我想想办法追英语老师','我今天又去办公室了！！','英语老师穿衬衫太好看了'],
+  luzhilian:['@name有网站吗分享一下','哈哈哈哈别光聊天来点资源','正经人谁没有网站啊','@name发个网站','百度搜不到才问你们的','你们聊我只要网站']
+};
+const laughReplies=['哈哈哈哈笑死了','救命好好笑','我不行了','笑死我对你有什么好处','哈哈哈哈哈哈嗝','🤣🤣🤣','6','你是懂幽默的','有道理但不多','哈哈哈哈确实'];
+
+function smartReply(fromId,toId){
+  const bank=replyBank[fromId]||replyBank['laodai'];
+  let r=bank[Math.floor(Math.random()*bank.length)];
+  if(toId!==null&&r.includes('@name')){const to=chars.find(c=>c.id===toId);r=r.replace(/@name/g,to?to.name:'大家')}
+  if(!r.includes('@name')&&Math.random()<.3){r=laughReplies[Math.floor(Math.random()*laughReplies.length)]+r}
+  return r;
+}
+
+// ══════ 背景 ══════
 (function(){const bg=document.getElementById('bgDots'),cl=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff922b','#cc5de8','#20c997'];for(let i=0;i<20;i++){const d=document.createElement('div');d.className='bg-dot';d.style.width=(3+Math.random()*6)+'px';d.style.height=d.style.width;d.style.background=cl[Math.floor(Math.random()*cl.length)];d.style.left=Math.random()*95+'%';d.style.animationDuration=(10+Math.random()*20)+'s';d.style.animationDelay=Math.random()*10+'s';bg.appendChild(d)}})();
 const toast=document.getElementById('toast');let tt;
 function T(t){clearTimeout(tt);toast.textContent=t;toast.classList.remove('show');void toast.offsetWidth;toast.classList.add('show');tt=setTimeout(()=>toast.classList.remove('show'),1700)}
 
-// ══════ 语录 ══════
-let qi=0;document.getElementById('quoteText').textContent=quotes[0];
-document.getElementById('quoteBar').addEventListener('click',()=>{qi=(qi+1)%quotes.length;document.getElementById('quoteText').textContent=quotes[qi];const b=document.getElementById('quoteBar');b.style.transform='scale(.96)';setTimeout(()=>b.style.transform='scale(1)',150)});
+// ══════ Live场景：卡通小人互相聊天 ══════
+const liveChars=document.getElementById('liveChars'),liveScene=document.getElementById('liveScene');
+let lastSpeaker=-1,lastListener=-1;
 
-// ══════ 模式切换 ══════
-let mode='list';
-document.querySelectorAll('.mode-tab').forEach(t=>{t.addEventListener('click',()=>{mode=t.dataset.panel;document.querySelectorAll('.mode-tab').forEach(x=>x.classList.remove('sel'));t.classList.add('sel');document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));document.getElementById('panel'+mode.charAt(0).toUpperCase()+mode.slice(1)).classList.add('show');if(mode==='moments')renderMoments();if(mode==='group')chaosGC()})});
-
-// ══════ 角色列表 ══════
-const charList=document.getElementById('charList');
 chars.forEach((c,i)=>{
-  const card=document.createElement('div');card.className='char-card';
-  card.innerHTML='<div class="av" style="background:linear-gradient(135deg,'+c.c+','+c.c+'88)">'+c.emoji+'</div><div class="info"><div class="nm">'+c.name+'<span style="background:'+c.c+'33;color:'+c.c+'">'+c.tag+'</span></div><div class="lt">'+c.lines[Math.floor(Math.random()*c.lines.length)]+'</div></div>';
-  card.addEventListener('click',function(){if(card._t&&Date.now()-card._t<400){T('👋 拍了拍 '+c.name+'：'+c.lines[Math.floor(Math.random()*c.lines.length)]);card.style.transform='translateX(-6px)';setTimeout(()=>card.style.transform='',100);card._t=0;return}card._t=Date.now();setTimeout(()=>{if(card._t&&Date.now()-card._t>400)openChat(c)},420)});
-  charList.appendChild(card);
+  const el=document.createElement('div');el.className='live-char';el.id='lc'+c.id;
+  el.innerHTML='<span class="lc-emoji">'+c.emoji+'</span><span class="lc-name">'+c.name+'</span>';
+  el.addEventListener('click',()=>openChat(c));
+  liveChars.appendChild(el);
 });
 
-// ══════ 群聊 ══════
-const gcMsgs=document.getElementById('gcMsgs');
-function addGcMsg(i,text){const d=document.createElement('div');d.className='gc-msg';d.style.background=gcColors[i]+'18';d.style.color=gcColors[i];d.innerHTML='<div class="who">'+gcNames[i]+'</div>'+text;gcMsgs.appendChild(d);gcMsgs.scrollTop=gcMsgs.scrollHeight}
-function chaosGC(){gcMsgs.innerHTML='';const n=5+Math.floor(Math.random()*6);for(let j=0;j<n;j++){const ci=Math.floor(Math.random()*7);setTimeout(()=>addGcMsg(ci,chars[ci].lines[Math.floor(Math.random()*chars[ci].lines.length)]),j*(250+Math.random()*500))}}
-function allMembers(){addGcMsg(Math.floor(Math.random()*7),'@全体成员 出来！！！');const ids=[0,1,2,3,4,5,6].sort(()=>Math.random()-.5);ids.forEach((i,idx)=>{setTimeout(()=>addGcMsg(i,chars[i].replies[Math.floor(Math.random()*chars[i].replies.length)]),300+idx*(300+Math.random()*400))})}
-chaosGC();
-document.getElementById('gcAllBtn').addEventListener('click',allMembers);
-setInterval(()=>{if(mode==='group'&&Math.random()<.22){const ci=Math.floor(Math.random()*7);addGcMsg(ci,chars[ci].lines[Math.floor(Math.random()*chars[ci].lines.length)])}},4000);
-
-// ══════ 朋友圈 ══════
-function renderMoments(){
-  const mm=document.getElementById('momentsContent'),posts=[{ci:0,text:'老廖又来找我聊天了，我真的服了，出轨大业又搁置了一天🙄',l:23,c:5},{ci:1,text:'新疆人吃饭了！！（配图：大盘鸡）🍗',l:41,c:12},{ci:2,text:'今天我真开始学习了（配图：手机屏幕）📱',l:35,c:8},{ci:4,text:'沈明珠！！屋内不许荡秋千！！说了多少次了！！😡',l:56,c:15},{ci:5,text:'英语老师今天穿了件白衬衫，太好看了我要死了😭💕',l:18,c:6},{ci:3,text:'何云伟今天会叫妈妈了！！老母亲落泪😭😭😭',l:67,c:22},{ci:6,text:'谁有网站啊我要视频，兄弟们帮帮忙',l:0,c:3},{ci:0,text:'我感觉我出轨的机会来了，老廖今天没找我！！激动',l:31,c:9},{ci:2,text:'手机真的太好玩了，我宣布今天不学了😂',l:44,c:11},{ci:4,text:'我的金鱼还活着，它只是睡着了，一定是这样🐟',l:29,c:14}];
-  mm.innerHTML=posts.sort(()=>Math.random()-.5).slice(0,6).map((p,i)=>{const c=chars[p.ci];return'<div class="moment-card" style="animation-delay:'+(i*.06)+'s"><div class="mh"><div class="mav" style="background:'+c.c+'33">'+c.emoji+'</div><div><div class="mname">'+c.name+'</div><div class="mtime">'+(3+Math.floor(Math.random()*55))+'分钟前</div></div></div><div class="mt">'+p.text+'</div><div class="ma"><span>❤️ '+p.l+'</span><span>💬 '+p.c+'</span><span>😆</span></div></div>'}).join('');
+function showSpeechBubble(charId,text,isReply){
+  const el=document.getElementById('lc'+charId);if(!el)return;
+  el.classList.add('speaking');setTimeout(()=>el.classList.remove('speaking'),800);
+  const bub=document.createElement('div');bub.className='speech-bubble'+(isReply?' reply':'');
+  bub.textContent=text;
+  const rect=el.getBoundingClientRect(),sceneRect=liveScene.getBoundingClientRect();
+  const left=rect.left-sceneRect.left+rect.width/2-(text.length*3);
+  bub.style.left=Math.max(2,Math.min(sceneRect.width-130,left))+'px';
+  bub.style.top=(rect.top-sceneRect.top-35)+'px';
+  liveScene.appendChild(bub);
+  setTimeout(()=>bub.remove(),3200);
 }
 
-// ══════ 私聊 ══════
+// 互相聊天的对话链
+function startConversation(){
+  const a=Math.floor(Math.random()*7);
+  let b=Math.floor(Math.random()*7);
+  while(b===a)b=Math.floor(Math.random()*7);
+  // A先说话
+  const speechA=chars[a].catchphrases[Math.floor(Math.random()*chars[a].catchphrases.length)];
+  showSpeechBubble(chars[a].id,speechA,false);
+  lastSpeaker=a;lastListener=b;
+  // B回复
+  setTimeout(()=>{
+    const replyB=smartReply(chars[b].id,chars[a].id);
+    showSpeechBubble(chars[b].id,replyB,true);
+    // 偶尔C也插嘴
+    if(Math.random()<.5){
+      setTimeout(()=>{
+        let c=Math.floor(Math.random()*7);
+        while(c===a||c===b)c=Math.floor(Math.random()*7);
+        const replyC=smartReply(chars[c].id,chars[b].id);
+        showSpeechBubble(chars[c].id,replyC,true);
+      },1200+Math.random()*1500);
+    }
+  },600+Math.random()*1400);
+}
+
+// 初始启动两轮对话
+setTimeout(()=>startConversation(),800);
+setTimeout(()=>startConversation(),2200);
+// 定期对话
+setInterval(()=>{if(Math.random()<.6){const solo=Math.floor(Math.random()*7);showSpeechBubble(chars[solo].id,chars[solo].catchphrases[Math.floor(Math.random()*chars[solo].catchphrases.length)],false)}else startConversation()},4000+Math.random()*3000);
+
+// ══════ 模式切换 ══════
+let mode='games';
+document.querySelectorAll('.mode-tab').forEach(t=>{t.addEventListener('click',()=>{mode=t.dataset.panel;document.querySelectorAll('.mode-tab').forEach(x=>x.classList.remove('sel'));t.classList.add('sel');document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));document.getElementById('panel'+mode.charAt(0).toUpperCase()+mode.slice(1)).classList.add('show');if(mode==='moments')renderMoments();if(mode==='group')chaosGC()})});
+
+// ══════ 群聊（智能版） ══════
+const gcMsgs=document.getElementById('gcMsgs');
+function addGcMsg(i,text,replyTo){const d=document.createElement('div');d.className='gc-msg';d.style.background=gcColors[i]+'18';d.style.color=gcColors[i];const prefix=replyTo!==null?'→ @'+chars[replyTo].name+' ':'';
+  d.innerHTML='<div class="who">'+gcNames[i]+'</div>'+prefix+text;gcMsgs.appendChild(d);gcMsgs.scrollTop=gcMsgs.scrollHeight}
+function chaosGC(){gcMsgs.innerHTML='';const speaker=Math.floor(Math.random()*7);addGcMsg(speaker,chars[speaker].catchphrases[Math.floor(Math.random()*chars[speaker].catchphrases.length)],null);
+  for(let j=1;j<4+Math.floor(Math.random()*5);j++){const prev=Math.floor(Math.random()*7);const responder=Math.floor(Math.random()*7);setTimeout(()=>addGcMsg(responder,smartReply(responder,prev),prev),j*(400+Math.random()*700))}}
+function allMembers(){addGcMsg(0,'@全体成员 📢📢📢',null);[1,2,3,4,5,6].sort(()=>Math.random()-.5).forEach((i,idx)=>{setTimeout(()=>addGcMsg(i,smartReply(i,0),0),300+idx*(350+Math.random()*500))})}
+chaosGC();document.getElementById('gcAllBtn').addEventListener('click',allMembers);
+setInterval(()=>{if(mode==='group'&&Math.random()<.2){const ci=Math.floor(Math.random()*7);const rid=Math.floor(Math.random()*7);addGcMsg(ci,smartReply(ci,rid===ci?null:rid),rid===ci?null:rid)}},3500);
+
+// ══════ 朋友圈 ══════
+function renderMoments(){const mm=document.getElementById('momentsContent');const posts=[{c:0,t:'老廖又来找我聊天了，我真的服了，出轨大业又搁置了一天🙄',l:23,cm:5},{c:1,t:'新疆人吃饭了！！（配图：大盘鸡）🍗',l:41,cm:12},{c:2,t:'今天我真开始学习了（配图：手机屏幕）📱',l:35,cm:8},{c:4,t:'沈明珠！！屋内不许荡秋千！！说了多少次了！！😡',l:56,cm:15},{c:5,t:'英语老师今天穿了件白衬衫，太好看了我要死了😭💕',l:18,cm:6},{c:3,t:'何云伟今天会叫妈妈了！！老母亲落泪😭😭😭',l:67,cm:22},{c:6,t:'谁有网站啊我要视频，兄弟们帮帮忙',l:0,cm:3},{c:0,t:'我感觉我出轨的机会来了，老廖今天没找我！！',l:31,cm:9},{c:2,t:'手机真的太好玩了，我宣布今天不学了😂',l:44,cm:11},{c:4,t:'我的金鱼还活着，它只是睡着了，一定是这样🐟',l:29,cm:14}];
+  mm.innerHTML=posts.sort(()=>Math.random()-.5).slice(0,6).map((p,i)=>{const c=chars[p.c];return'<div class="moment-card" style="animation-delay:'+(i*.06)+'s"><div class="mh"><div class="mav" style="background:'+c.c+'33">'+c.emoji+'</div><div><div class="mname">'+c.name+'</div><div class="mtime">'+(3+Math.floor(Math.random()*55))+'分钟前</div></div></div><div class="mt">'+p.t+'</div><div class="ma"><span>❤️ '+p.l+'</span><span>💬 '+p.cm+'</span><span>😆</span></div></div>'}).join('')}
+
+// ══════ 私聊（智能回复） ══════
 const chatPopup=document.getElementById('chatPopup'),overlay=document.getElementById('overlay');
-function openChat(c){chatPopup.innerHTML='<div class="cp-h"><span class="cp-name">'+c.emoji+' '+c.name+'</span><button class="cp-x" onclick="closeChat()">✕</button></div><div class="cp-msgs" id="cpMsgs"><div class="cp-msg them">'+c.lines[Math.floor(Math.random()*c.lines.length)]+'</div></div><div class="cp-row"><input class="cp-in" id="cpInput" placeholder="跟'+c.name+'说点什么..." maxlength="200" autocomplete="off"><button class="cp-send" id="cpSend">➤</button></div><div class="cp-quick" id="cpQuick"></div>';const cq=document.getElementById('cpQuick');c.quick.forEach(q=>{const b=document.createElement('button');b.textContent=q;b.addEventListener('click',()=>{aM(q,'me');setTimeout(()=>aR(c),400+Math.random()*600)});cq.appendChild(b)});chatPopup.classList.add('show');overlay.classList.add('show');document.getElementById('cpInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();sM(c)}});document.getElementById('cpSend').addEventListener('click',()=>sM(c));document.getElementById('cpInput').focus()}
-function sM(c){const inp=document.getElementById('cpInput');if(!inp||!inp.value.trim())return;aM(inp.value,'me');inp.value='';setTimeout(()=>aR(c),400+Math.random()*700)}
-function aM(text,who){const msgs=document.getElementById('cpMsgs');if(!msgs)return;const d=document.createElement('div');d.className='cp-msg '+who;d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight}
-function aR(c){aM(c.replies[Math.floor(Math.random()*c.replies.length)],'them');if(Math.random()<.3)setTimeout(()=>aM(c.lines[Math.floor(Math.random()*c.lines.length)],'them'),500+Math.random()*600)}
+function openChat(c){chatPopup.innerHTML='<div class="cp-h"><span class="cp-name">'+c.emoji+' '+c.name+'</span><button class="cp-x" onclick="closeChat()">✕</button></div><div class="cp-msgs" id="cpMsgs"><div class="cp-msg them">'+c.catchphrases[Math.floor(Math.random()*c.catchphrases.length)]+'</div></div><div class="cp-row"><input class="cp-in" id="cpInput" placeholder="跟'+c.name+'说点什么..." maxlength="200" autocomplete="off"><button class="cp-send" id="cpSend">➤</button></div><div class="cp-quick" id="cpQuick"></div>';const cq=document.getElementById('cpQuick');const idx=chars.indexOf(c);let others=[];while(others.length<3){const oi=Math.floor(Math.random()*7);if(oi!==idx&&!others.includes(oi))others.push(oi)}others.forEach(oi=>{const b=document.createElement('button');b.textContent='@'+chars[oi].name;b.addEventListener('click',()=>{addMsg('@'+chars[oi].name+' ','me');setTimeout(()=>autoReply(c,oi),400+Math.random()*600)});cq.appendChild(b)});chatPopup.classList.add('show');overlay.classList.add('show');document.getElementById('cpInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();sendMsg(c)}});document.getElementById('cpSend').addEventListener('click',()=>sendMsg(c));document.getElementById('cpInput').focus()}
+function sendMsg(c){const inp=document.getElementById('cpInput');if(!inp||!inp.value.trim())return;addMsg(inp.value,'me');inp.value='';const ci=chars.indexOf(c);let ref=Math.floor(Math.random()*7);if(ref===ci)ref=null;setTimeout(()=>autoReply(c,ref),400+Math.random()*700)}
+function addMsg(text,who){const msgs=document.getElementById('cpMsgs');if(!msgs)return;const d=document.createElement('div');d.className='cp-msg '+who;d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight}
+function autoReply(c,refId){const ci=chars.indexOf(c);const r=smartReply(c.id,refId);addMsg(r,'them');setTimeout(()=>{if(Math.random()<.35)addMsg(c.catchphrases[Math.floor(Math.random()*c.catchphrases.length)],'them')},600+Math.random()*800)}
 function closeChat(){chatPopup.classList.remove('show');overlay.classList.remove('show')}
 overlay.addEventListener('click',closeChat);
 
-// ══════ 游戏：打地鼠 ══════
-let ws=0,wt=30,wTimer=null,moleTimer=null;
+// ══════ 打地鼠 ══════
+let ws=0,wt=30,wTimer=null,mTimer=null;
 const wBoard=document.getElementById('whackBoard'),wScore=document.getElementById('whackScore'),wTime=document.getElementById('whackTime'),wStart=document.getElementById('whackStart');
-for(let i=0;i<9;i++){const hole=document.createElement('div');hole.className='whack-hole';hole.textContent='🕳️';hole.addEventListener('click',()=>{if(hole.classList.contains('active')){hole.classList.remove('active');hole.textContent='💥';ws++;wScore.textContent=ws;setTimeout(()=>{hole.textContent='🕳️'},200)}});wBoard.appendChild(hole)}
-function popMole(){const holes=wBoard.querySelectorAll('.whack-hole');holes.forEach(h=>{h.classList.remove('active');h.textContent='🕳️'});const r=Math.floor(Math.random()*9);const h=holes[r];h.classList.add('active');h.textContent=chars[Math.floor(Math.random()*7)].emoji}
-function startWhack(){ws=0;wt=30;wScore.textContent='0';wTime.textContent='30';wStart.textContent='🔨 游戏中...';wStart.disabled=true;popMole();moleTimer=setInterval(popMole,800);wTimer=setInterval(()=>{wt--;wTime.textContent=wt;if(wt<=0){clearInterval(wTimer);clearInterval(moleTimer);wStart.textContent='🔨 再来一局！';wStart.disabled=false;wBoard.querySelectorAll('.whack-hole').forEach(h=>{h.classList.remove('active');h.textContent='🕳️'});T('⏰ 时间到！得分：'+ws)}},1000)}
+for(let i=0;i<9;i++){const h=document.createElement('div');h.className='whack-hole';h.textContent='🕳️';h.addEventListener('click',()=>{if(h.classList.contains('active')){h.classList.remove('active');h.textContent='💥';ws++;wScore.textContent=ws;setTimeout(()=>{h.textContent='🕳️'},200)}});wBoard.appendChild(h)}
+function popMole(){const holes=wBoard.querySelectorAll('.whack-hole');holes.forEach(h=>{h.classList.remove('active');h.textContent='🕳️'});const r=Math.floor(Math.random()*9);holes[r].classList.add('active');holes[r].textContent=chars[Math.floor(Math.random()*7)].emoji}
+function startWhack(){ws=0;wt=30;wScore.textContent='0';wTime.textContent='30';wStart.textContent='🔨 游戏中...';wStart.disabled=true;popMole();mTimer=setInterval(popMole,750);wTimer=setInterval(()=>{wt--;wTime.textContent=wt;if(wt<=0){clearInterval(wTimer);clearInterval(mTimer);wStart.textContent='🔨 再来一局！';wStart.disabled=false;wBoard.querySelectorAll('.whack-hole').forEach(h=>{h.classList.remove('active');h.textContent='🕳️'});T('⏰ 时间到！得分：'+ws)}},1000)}
 wStart.addEventListener('click',startWhack);
 
-// ══════ 游戏：真心话大冒险转盘 ══════
+// ══════ 转盘 ══════
 const wheelCanvas=document.getElementById('wheelCanvas'),wheelResult=document.getElementById('wheelResult');
-const wheelItems=['🙈 真心话：上次哭是什么时候','😈 大冒险：学狗叫三声','🙈 真心话：暗恋过几个人','😈 大冒险：发一条尴尬自拍','🙈 真心话：最社死的一次经历','😈 大冒险：用夹子音说话一分钟','🙈 真心话：有没有偷看过别人手机','😈 大冒险：模仿对面的人','🙈 真心话：做过最离谱的梦','😈 大冒险：倒立十秒钟','🙈 真心话：最近一次撒谎是什么','😈 大冒险：给上一个聊天的人发表情包'];
+const wheelItems=['🙈 真心话：上次哭是什么时候','😈 大冒险：学狗叫三声','🙈 真心话：暗恋过几个人','😈 大冒险：发一条最丑自拍','🙈 真心话：最社死的一次经历','😈 大冒险：用夹子音说话一分钟','🙈 真心话：有没有偷看过别人手机','😈 大冒险：模仿群里的一个人','🙈 真心话：做过最离谱的梦','😈 大冒险：倒立十秒钟','🙈 真心话：最近一次撒谎是什么','😈 大冒险：给上一个人发表情包'];
 let wsAngle=0,wsSpinning=false;
-function drawWheel(angle){
-  const ctx=wheelCanvas.getContext('2d'),n=wheelItems.length,arc=2*Math.PI/n;
-  ctx.clearRect(0,0,280,280);
-  for(let i=0;i<n;i++){
-    ctx.beginPath();ctx.moveTo(140,140);ctx.arc(140,140,130,angle+i*arc,angle+(i+1)*arc);
-    ctx.fillStyle=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff922b','#cc5de8','#20c997','#ff5252','#ffab40','#448aff','#00bfa5','#ff8a80'][i];ctx.fill();
-    ctx.save();ctx.translate(140,140);ctx.rotate(angle+i*arc+arc/2);ctx.fillStyle='#fff';ctx.font='bold 10px "PingFang SC","Microsoft YaHei"';ctx.textAlign='center';ctx.fillText(wheelItems[i].slice(0,8)+'...',90,3);ctx.restore();
-  }
-  ctx.beginPath();ctx.arc(140,140,12,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();
-  ctx.beginPath();ctx.moveTo(140,20);ctx.lineTo(130,4);ctx.lineTo(150,4);ctx.closePath();ctx.fillStyle='#fff';ctx.fill();
-}
+function drawWheel(angle){const ctx=wheelCanvas.getContext('2d'),n=wheelItems.length,arc=2*Math.PI/n;ctx.clearRect(0,0,280,280);for(let i=0;i<n;i++){ctx.beginPath();ctx.moveTo(140,140);ctx.arc(140,140,130,angle+i*arc,angle+(i+1)*arc);ctx.fillStyle=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff922b','#cc5de8','#20c997','#ff5252','#ffab40','#448aff','#00bfa5','#ff8a80'][i];ctx.fill();ctx.save();ctx.translate(140,140);ctx.rotate(angle+i*arc+arc/2);ctx.fillStyle='#fff';ctx.font='bold 10px "PingFang SC","Microsoft YaHei"';ctx.textAlign='center';ctx.fillText(wheelItems[i].slice(0,8)+'...',90,3);ctx.restore()}ctx.beginPath();ctx.arc(140,140,12,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();ctx.beginPath();ctx.moveTo(140,20);ctx.lineTo(130,4);ctx.lineTo(150,4);ctx.closePath();ctx.fillStyle='#fff';ctx.fill()}
 drawWheel(0);
-wheelCanvas.addEventListener('click',()=>{
-  if(wsSpinning)return;wsSpinning=true;const spins=3+Math.floor(Math.random()*3);const target=Math.random()*2*Math.PI;const total=spins*2*Math.PI+target;const start=wsAngle;const dur=3000;const startT=Date.now();
-  function anim(){const elapsed=Date.now()-startT;const progress=Math.min(1,elapsed/dur);const ease=1-Math.pow(1-progress,3);wsAngle=start+total*ease;drawWheel(wsAngle);if(progress<1)requestAnimationFrame(anim);else{wsSpinning=false;const n=wheelItems.length,arc=2*Math.PI/n;const idx=Math.floor(((2*Math.PI-wsAngle%(2*Math.PI))%(2*Math.PI))/arc)%n;wheelResult.textContent=wheelItems[idx]}}
-  anim();
-});
+wheelCanvas.addEventListener('click',()=>{if(wsSpinning)return;wsSpinning=true;const spins=3+Math.floor(Math.random()*3);const target=Math.random()*2*Math.PI;const total=spins*2*Math.PI+target;const start=wsAngle;const dur=3000;const startT=Date.now();function anim(){const elapsed=Date.now()-startT;const progress=Math.min(1,elapsed/dur);const ease=1-Math.pow(1-progress,3);wsAngle=start+total*ease;drawWheel(wsAngle);if(progress<1)requestAnimationFrame(anim);else{wsSpinning=false;const n=wheelItems.length,arc=2*Math.PI/n;const idx=Math.floor(((2*Math.PI-wsAngle%(2*Math.PI))%(2*Math.PI))/arc)%n;wheelResult.textContent=wheelItems[idx]}}anim()});
 
-// ══════ 游戏：弹幕墙 ══════
+// ══════ 弹幕 ══════
 const dmStage=document.getElementById('danmakuStage'),dmInput=document.getElementById('dmInput');
-const dmPresets=['哈哈哈哈笑死','老廖呢？','何云伟最萌！！','沈明珠别荡秋千了','我真开始学习了','新疆人吃饭了！','英语老师yyds','谁有网站？？'];
-function sendDanmaku(text){
-  const m=document.createElement('div');m.className='danmaku-msg';m.textContent=text;
-  m.style.color=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff922b','#cc5de8','#20c997'][Math.floor(Math.random()*7)];
-  m.style.top=(10+Math.random()*(dmStage.clientHeight-40))+'px';m.style.fontSize=(14+Math.random()*12)+'px';
-  dmStage.appendChild(m);setTimeout(()=>m.remove(),8500);
-}
-function fireDanmaku(){const t=dmInput.value.trim();if(!t)return;sendDanmaku(t);dmInput.value='';dmInput.focus()}
-document.getElementById('dmSend').addEventListener('click',fireDanmaku);
-dmInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();fireDanmaku()}});
-const dmPresetRow=document.getElementById('dmPresets');dmPresets.forEach(p=>{const b=document.createElement('button');b.textContent=p;b.addEventListener('click',()=>sendDanmaku(p));dmPresetRow.appendChild(b)});
+const dmPresets=['哈哈哈哈笑死','老廖呢？？','何云伟最萌！！','沈明珠别荡秋千了','我真开始学习了','新疆人吃饭了！','英语老师yyds','谁有网站？？'];
+function sendDm(t){const m=document.createElement('div');m.className='danmaku-msg';m.textContent=t;m.style.color=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff922b','#cc5de8','#20c997'][Math.floor(Math.random()*7)];m.style.top=(8+Math.random()*(dmStage.clientHeight-40))+'px';m.style.fontSize=(14+Math.random()*12)+'px';dmStage.appendChild(m);setTimeout(()=>m.remove(),8500)}
+function fireDm(){const t=dmInput.value.trim();if(!t)return;sendDm(t);dmInput.value='';dmInput.focus()}document.getElementById('dmSend').addEventListener('click',fireDm);dmInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();fireDm()}});const dpRow=document.getElementById('dmPresets');dmPresets.forEach(p=>{const b=document.createElement('button');b.textContent=p;b.addEventListener('click',()=>sendDm(p));dpRow.appendChild(b)});
 
 // ══════ 游戏切换 ══════
 document.querySelectorAll('.gtab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.gtab').forEach(x=>x.classList.remove('sel'));t.classList.add('sel');const g=t.dataset.game;document.getElementById('gameWhack').style.display=g==='whack'?'block':'none';document.getElementById('gameWheel').style.display=g==='wheel'?'block':'none';document.getElementById('gameDanmaku').style.display=g==='danmaku'?'block':'none'})});
