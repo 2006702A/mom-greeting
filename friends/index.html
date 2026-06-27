@@ -61,7 +61,7 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-f
 .race-lane .lane-runner{position:absolute;left:2px;top:50%;transform:translateY(-50%);font-size:22px;transition:left .3s ease-out;z-index:2}
 .race-lane .lane-finish{position:absolute;right:2px;top:0;height:100%;width:2px;background:rgba(255,255,255,.1)}
 .race-bet{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-bottom:6px}
-.race-bet button{padding:5px 10px;border-radius:14px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.race-bet{position:relative;z-index:2}.race-bet button{padding:5px 10px;border-radius:14px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;-webkit-tap-highlight-color:transparent}
 .race-bet button.sel{border-color:#ffd93d;color:#ffd93d;background:rgba(255,217,61,.12)}
 .race-bet button.won{border-color:#6bcb77;color:#6bcb77;background:rgba(107,203,119,.2);animation:winPulse .5s ease-in-out 3}
 @keyframes winPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
@@ -165,18 +165,14 @@ async function aiChat(charId,userMsg,history){
   if(!API_KEY)return null;
   try{
     const sys=buildSys(charId);
-    let msgs=[{role:'system',content:sys}];
-    const recent=history.slice(-8);
-    for(const h of recent)msgs.push(h);
-    msgs.push({role:'user',content:userMsg});
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:200,messages:[{role:'user',content:sys+'\n\n用户发来：'+userMsg+'\n\n用角色身份回复，要短要自然，不要超过三句话。'}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:200,messages:[{role:'user',content:sys+'\n\n用户：'+userMsg+'\n\n用角色身份回复，短、自然。'}]})
     });
-    if(!resp.ok){if(resp.status===401){API_KEY='';T('Key错了');akOk.classList.remove('show')}return null}
     const data=await resp.json();
+    if(!resp.ok){T('API错误: '+(data.error?data.error.message:resp.status));return null}
     return data.content[0].text.trim();
-  }catch(e){console.error(e);return null}
+  }catch(e){T('网络错误，检查Key或网络');return null}
 }
 
 // ══════ 背景 ══════
@@ -186,13 +182,13 @@ function T(t){clearTimeout(tt);toast.textContent=t;toast.classList.remove('show'
 
 // 本地回复
 const lr={
-  yanzi:['笑死','确实','老廖又给人打钉呢','有道理','啊啊啊好烦','今天也是找0失败的一天','老廖的穿孔店又来客人了','行吧行吧','什么时候能出轨啊烦死了','噗哈哈哈','我什么时候能出轨成功啊'],
-  qinyi:['哈哈哈哈','来新疆请你吃饭','志愿填完了吗你','洱海又胖了','新疆菜真好吃','头疼','洱海今天把猫粮打翻了','行吧','饿了我去吃饭了'],
-  laodai:['笑死了','别跟我提背单词','我再躺五分钟','想和陈道明聊天','确实确实','谁提背单词我咬谁','有道理','学习明天再说','别说了刷抖音呢'],
-  qiangzi:['何云伟说他也觉得','哈哈哈哈','我儿子醒了等会说','带娃好累','确实','何云伟真可爱','当妈之后看啥都不一样了'],
-  piaoyunli:['沈明珠你听到没','我金鱼今天好像动了','确实','沈明珠！！','行吧','我金鱼肯定还活着','嗯嗯'],
-  naima:['啊？什么','英语老师说想我了','今天画室的光线好好看','嘿嘿','我在画英语老师','他说我画得像他哈哈','你们在说啥我没跟上','好诶'],
-  luzhilian:['那得多大啊','确实','不是，你这...','别闹','展开说说','哈哈哈哈','笑死了','你不对劲','行吧行吧']
+  yanzi:['笑死','确实','老廖又给人打钉呢','行吧','今天也是找0失败的一天','噗'],
+  qinyi:['哈哈哈哈','来新疆吃饭','洱海又胖了','头疼','行吧','饿了我去吃饭了'],
+  laodai:['笑死了','别跟我提背单词','想和陈道明聊天','确实','学习明天再说'],
+  qiangzi:['哈哈','我儿子醒了等会说','带娃好累','确实','何云伟真可爱'],
+  piaoyunli:['沈明珠你听到没','我金鱼今天好像动了','确实','行吧'],
+  naima:['啊？','嘿嘿','英语老师说想我了','好诶','我在画画'],
+  luzhilian:['不是','确实','别闹','展开说说','哈哈哈哈']
 };
 
 // ══════ Live场景 ══════
@@ -236,8 +232,9 @@ wSt.addEventListener('click',()=>{ws=0;wt=30;wSc.textContent='0';wTi.textContent
 // ══════ 赛跑 ══════
 let rBet=null,rRunning=false;
 const rTrack=document.getElementById('raceTrack'),rBetEl=document.getElementById('raceBet'),rResult=document.getElementById('raceResult'),rBtn=document.getElementById('raceBtn');
-// 下注按钮
-chars.forEach((c,i)=>{const b=document.createElement('button');b.textContent=c.emoji+' '+c.name;b.addEventListener('click',()=>{if(rRunning)return;rBet=i;rBetEl.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');rResult.textContent='👆 押了 '+c.name+'！点开始'});rBetEl.appendChild(b)});
+// 下注按钮（内联onclick确保能点）
+function placeBet(i){if(rRunning)return;rBet=i;rBetEl.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));rBetEl.querySelectorAll('button').forEach((x,j)=>{if(j===i)x.classList.add('sel')});rResult.textContent='👆 押了 '+chars[i].name+'！点开始'}
+chars.forEach((c,i)=>{const b=document.createElement('button');b.textContent=c.emoji+' '+c.name;b.setAttribute('onclick','placeBet('+i+')');rBetEl.appendChild(b)});
 // 赛道
 chars.forEach((c,i)=>{const l=document.createElement('div');l.className='race-lane';l.innerHTML='<span class="lane-name">'+c.emoji+'</span><div class="lane-track"><div class="lane-finish"></div><span class="lane-runner" id="runner'+i+'">'+c.emoji+'</span></div>';rTrack.appendChild(l)});
 rBtn.addEventListener('click',()=>{
