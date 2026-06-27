@@ -82,6 +82,10 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#1a1a2e;font-f
 .overlay.show{display:block}
 
 /* toast */
+.music-btn{position:fixed;bottom:20px;right:20px;z-index:400;width:46px;height:46px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:22px;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 4px 16px rgba(0,0,0,.3);transition:all .2s}
+.music-btn:active{transform:scale(.88)}
+.music-btn.on{animation:musicSpin 2s linear infinite;background:rgba(255,107,107,.3)}
+@keyframes musicSpin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 .toast{position:fixed;top:44%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,.9);border-radius:16px;padding:16px 24px;font-size:16px;font-weight:700;color:#fff;z-index:600;pointer-events:none;text-align:center;max-width:82%;letter-spacing:1px}
 .toast.show{animation:toastPop 1.8s ease-out forwards}
 @keyframes toastPop{0%{transform:translate(-50%,-50%) scale(0)}12%{transform:translate(-50%,-50%) scale(1.1)}22%{transform:translate(-50%,-50%) scale(1)}70%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-50%) scale(.8);opacity:0}}
@@ -93,13 +97,13 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#1a1a2e;font-f
 
 <div class="bg-particles" id="bgParticles"></div>
 <div class="toast" id="toast"></div>
+<button class="music-btn" id="musicBtn">🎵</button>
 <div class="overlay" id="overlay"></div>
 <div class="chat-popup" id="chatPopup"></div>
 
 <div class="app">
   <div class="header">
-    <h1>一群神仙</h1>
-    <div class="sub">点谁跟谁聊 · 随性不矫情</div>
+    <h1>天津站之九子夺嫡</h1>
   </div>
   <div class="char-grid" id="charGrid"></div>
 </div>
@@ -110,6 +114,14 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#1a1a2e;font-f
 
 const toast=document.getElementById('toast');let tt;
 function T(t){clearTimeout(tt);toast.textContent=t;toast.classList.remove('show');void toast.offsetWidth;toast.classList.add('show');tt=setTimeout(()=>toast.classList.remove('show'),2000)}
+
+// 搞笑音乐
+let ac=null,mo=false,mt=null;
+const mel=[262,330,392,523,392,330,262,294,349,440,349,294,262,330,392,523,440,349,294,262,330,392,523,659,587,523,440,349,330,294,262],rhy=[180,180,200,200,180,180,220,180,180,200,180,180,220,160,160,180,160,160,200,180,180,180,180,200,160,160,180,160,160,220,280];
+const mb=document.getElementById('musicBtn');
+function tM(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();mo=!mo;if(mo){mb.textContent='🎶';mb.classList.add('on');pN(0)}else{mb.textContent='🎵';mb.classList.remove('on');clearTimeout(mt);if(ac.state==='running')ac.suspend()}}
+function pN(i){if(!mo)return;if(ac.state==='suspended')ac.resume();const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=mel[i%mel.length];g.gain.setValueAtTime(.03,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+rhy[i%rhy.length]/1000);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime);o.stop(ac.currentTime+rhy[i%rhy.length]/1000);mt=setTimeout(()=>pN((i+1)%mel.length),rhy[i%rhy.length])}
+mb.addEventListener('click',tM);
 
 // 角色数据
 const chars=[
