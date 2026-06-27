@@ -3,186 +3,248 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>群聊 · 都是一群神仙</title>
+<title>天津站之九子夺嫡</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}html{height:100%}
-body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#1a1a2e;font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;-webkit-tap-highlight-color:transparent}
+body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;-webkit-tap-highlight-color:transparent}
+.bg-dots{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.bg-dot{position:absolute;border-radius:50%;animation:bgDrift linear infinite;opacity:.4}
+@keyframes bgDrift{0%{transform:translateY(105vh) rotate(0)}100%{transform:translateY(-10vh) rotate(360deg)}}
+.app{position:relative;z-index:1;max-width:460px;width:95%;margin:0 auto;padding:12px 0 30px}
 
-.bg-particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
-.bg-dot{position:absolute;border-radius:50%;animation:bgFloat linear infinite;opacity:.5}
-@keyframes bgFloat{0%{transform:translateY(105vh) rotate(0)}100%{transform:translateY(-10vh) rotate(360deg)}}
+/* 语录横幅 */
+.quote-bar{background:linear-gradient(135deg,rgba(255,107,107,.15),rgba(255,217,61,.15),rgba(107,203,119,.15),rgba(77,150,255,.15));border-radius:14px;padding:10px 14px;margin-bottom:10px;text-align:center;animation:qbPulse 3s ease-in-out infinite;border:1px solid rgba(255,255,255,.06);cursor:pointer}
+@keyframes qbPulse{0%,100%{opacity:.85}50%{opacity:1}}
+.quote-bar .ql{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:3px;letter-spacing:2px}
+.quote-bar .qt{font-size:15px;color:#fff;font-weight:700;letter-spacing:1px;transition:all .3s}
 
-.app{position:relative;z-index:1;max-width:440px;width:94%;margin:0 auto;padding:16px 0 30px}
+/* 模式切换 */
+.mode-tabs{display:flex;gap:6px;margin-bottom:10px}
+.mode-tab{flex:1;padding:10px 0;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(255,255,255,.5);font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit}
+.mode-tab.sel{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)}
 
-.header{text-align:center;margin-bottom:14px;animation:fadeIn .5s ease-out}
-.header h1{font-size:28px;font-weight:900;background:linear-gradient(135deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#ff6b6b);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:rainbow 4s ease-in-out infinite;letter-spacing:2px}
-@keyframes rainbow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.header .sub{color:#aaa;font-size:14px;margin-top:4px;letter-spacing:2px}
+/* 群聊面板 */
+.group-chat{display:none;background:rgba(255,255,255,.03);border-radius:18px;padding:12px;margin-bottom:10px;border:1px solid rgba(255,255,255,.06);max-height:350px;overflow-y:auto}
+.group-chat.show{display:block}
+.gc-msg{padding:8px 12px;margin-bottom:6px;border-radius:14px;font-size:13px;line-height:1.4;max-width:85%;animation:gcFade .3s ease-out;border-bottom-left-radius:2px}
+@keyframes gcFade{0%{transform:translateY(8px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.gc-msg .gc-who{font-size:10px;color:inherit;opacity:.6;margin-bottom:2px}
+.gc-all-btn{display:block;width:100%;padding:12px;margin-top:8px;border-radius:16px;border:none;background:linear-gradient(135deg,rgba(255,82,82,.3),rgba(255,152,0,.3));color:#ff8a80;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:2px;font-family:inherit;transition:all .2s}
+.gc-all-btn:active{transform:scale(.94);background:rgba(255,82,82,.5)}
 
-.char-grid{display:flex;flex-direction:column;gap:10px}
+/* 角色列表 */
+.char-list{display:none;flex-direction:column;gap:8px}
+.char-list.show{display:flex}
+.char-card{background:rgba(255,255,255,.04);border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.06);position:relative;overflow:visible;-webkit-tap-highlight-color:transparent;animation:cardSlide .4s ease-out backwards}
+.char-card:nth-child(1){animation-delay:0s}.char-card:nth-child(2){animation-delay:.04s}.char-card:nth-child(3){animation-delay:.08s}.char-card:nth-child(4){animation-delay:.12s}.char-card:nth-child(5){animation-delay:.16s}.char-card:nth-child(6){animation-delay:.2s}.char-card:nth-child(7){animation-delay:.24s}
+@keyframes cardSlide{0%{transform:translateX(-20px);opacity:0}100%{transform:translateX(0);opacity:1}}
+.char-card:active{transform:scale(.96);background:rgba(255,255,255,.1)}
+.char-card.nudged{animation:nudgeAnim .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes nudgeAnim{0%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}100%{transform:translateX(0)}}
+.char-card .av{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;box-shadow:0 3px 14px rgba(0,0,0,.3)}
+.char-card .info{flex:1;min-width:0}
+.char-card .nm{font-size:16px;font-weight:800;color:#fff;margin-bottom:2px}
+.char-card .nm .tag{font-size:10px;padding:2px 7px;border-radius:8px;margin-left:5px;font-weight:500}
+.char-card .lt{font-size:12px;color:rgba(255,255,255,.4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.char-card .nudge-hint{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:20px;opacity:0;transition:all .3s}
+.char-card.nudged .nudge-hint{opacity:1;animation:nudgePop .4s ease-out}
+@keyframes nudgePop{0%{transform:translateY(-50%) scale(0)}60%{transform:translateY(-50%) scale(1.4)}100%{transform:translateY(-50%) scale(1)}}
 
-.char-card{
-  background:rgba(255,255,255,.05);backdrop-filter:blur(10px);
-  border-radius:20px;padding:14px;display:flex;align-items:center;gap:12px;
-  cursor:pointer;transition:all .25s;position:relative;overflow:visible;
-  border:1px solid rgba(255,255,255,.08);user-select:none;
-  -webkit-tap-highlight-color:transparent;
-  animation:cardIn .5s ease-out backwards;
-}
-.char-card:nth-child(1){animation-delay:0s}
-.char-card:nth-child(2){animation-delay:.06s}
-.char-card:nth-child(3){animation-delay:.12s}
-.char-card:nth-child(4){animation-delay:.18s}
-.char-card:nth-child(5){animation-delay:.24s}
-.char-card:nth-child(6){animation-delay:.3s}
-.char-card:nth-child(7){animation-delay:.36s}
-@keyframes cardIn{0%{transform:translateX(-30px);opacity:0}100%{transform:translateX(0);opacity:1}}
-.char-card:active{transform:scale(.96);background:rgba(255,255,255,.12)}
-.char-card.pop{animation:popB .4s cubic-bezier(.34,1.56,.64,1)}
-@keyframes popB{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+/* 朋友圈 */
+.moments{display:none;flex-direction:column;gap:10px;margin-bottom:10px}
+.moments.show{display:flex}
+.moment-card{background:rgba(255,255,255,.04);border-radius:18px;padding:14px;border:1px solid rgba(255,255,255,.06);animation:cardSlide .4s ease-out backwards}
+.moment-card .m-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.moment-card .m-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
+.moment-card .m-name{font-size:14px;font-weight:700;color:#fff}
+.moment-card .m-time{font-size:10px;color:rgba(255,255,255,.3)}
+.moment-card .m-text{font-size:14px;color:rgba(255,255,255,.75);line-height:1.5;margin-bottom:8px}
+.moment-card .m-actions{display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,.35)}
+.moment-card .m-actions span{cursor:pointer;transition:all .15s}
+.moment-card .m-actions span:active{color:#ff6b6b;transform:scale(1.1)}
 
-.char-avatar{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;flex-shrink:0;position:relative;box-shadow:0 4px 20px rgba(0,0,0,.3)}
-.char-avatar .deco{position:absolute;font-size:16px}
-.char-info{flex:1;min-width:0;z-index:1}
-.char-name-row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
-.char-name{font-size:17px;font-weight:800;color:#fff}
-.char-tag{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
-.char-latest{font-size:13px;color:rgba(255,255,255,.55);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-/* 各角色专属色 */
-.c-0 .char-avatar{background:linear-gradient(135deg,#448aff,#2979ff)}.c-0 .char-tag{background:rgba(68,138,255,.3);color:#82b1ff}
-.c-1 .char-avatar{background:linear-gradient(135deg,#e040fb,#aa00ff)}.c-1 .char-tag{background:rgba(224,64,251,.3);color:#ea80fc}
-.c-2 .char-avatar{background:linear-gradient(135deg,#ff9100,#ff6d00)}.c-2 .char-tag{background:rgba(255,145,0,.3);color:#ffab40}
-.c-3 .char-avatar{background:linear-gradient(135deg,#8d6e63,#5d4037)}.c-3 .char-tag{background:rgba(141,110,99,.3);color:#bcaaa4}
-.c-4 .char-avatar{background:linear-gradient(135deg,#00bfa5,#00b8d4)}.c-4 .char-tag{background:rgba(0,191,165,.3);color:#64ffda}
-.c-5 .char-avatar{background:linear-gradient(135deg,#ff5252,#d50000)}.c-5 .char-tag{background:rgba(255,82,82,.3);color:#ff8a80}
-.c-6 .char-avatar{background:linear-gradient(135deg,#ffd600,#ffab00)}.c-6 .char-tag{background:rgba(255,214,0,.3);color:#ffff00}
-
-/* 弹出聊天 */
-.chat-popup{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(20,20,40,.97);backdrop-filter:blur(20px);border-radius:24px 24px 0 0;padding:16px 16px 24px;max-width:440px;margin:0 auto;display:none;animation:slideUp .3s ease-out;max-height:60vh;overflow-y:auto}
+/* 聊天弹窗 */
+.chat-popup{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(15,15,26,.98);backdrop-filter:blur(20px);border-radius:22px 22px 0 0;padding:16px;max-width:460px;margin:0 auto;display:none;animation:slideUp .3s ease-out;max-height:65vh;overflow-y:auto}
 .chat-popup.show{display:block}
 @keyframes slideUp{0%{transform:translateY(100%)}100%{transform:translateY(0)}}
-.chat-popup .cp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.chat-popup .cp-name{font-size:20px;font-weight:800;color:#fff}
-.chat-popup .cp-close{width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:16px;cursor:pointer}
-.chat-popup .cp-msgs{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-.chat-popup .cp-msg{padding:10px 14px;border-radius:16px;font-size:14px;max-width:82%;line-height:1.5;animation:msgIn .3s ease-out}
-@keyframes msgIn{0%{transform:translateY(8px);opacity:0}100%{transform:translateY(0);opacity:1}}
-.cp-msg.them{align-self:flex-start;background:rgba(255,255,255,.08);color:#ddd;border-bottom-left-radius:4px}
-.cp-msg.me{align-self:flex-end;background:rgba(255,255,255,.15);color:#fff;border-bottom-right-radius:4px}
-.chat-popup .cp-input-row{display:flex;gap:8px}
-.chat-popup .cp-input{flex:1;padding:10px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#fff;font-size:14px;font-family:inherit;outline:none}
-.chat-popup .cp-reply-btn{width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:18px;cursor:pointer;flex-shrink:0}
-.chat-popup .cp-quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.chat-popup .cp-quick button{padding:7px 13px;border-radius:15px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#ccc;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s}
-.chat-popup .cp-quick button:active{background:rgba(255,255,255,.2);color:#fff;transform:scale(.94)}
+.cp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cp-name{font-size:18px;font-weight:800;color:#fff}
+.cp-close{width:30px;height:30px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:14px;cursor:pointer}
+.cp-msgs{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;max-height:240px;overflow-y:auto}
+.cp-msg{padding:9px 13px;border-radius:15px;font-size:13px;max-width:80%;line-height:1.4;animation:msgIn .25s ease-out;word-break:break-word}
+@keyframes msgIn{0%{transform:translateY(6px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.cp-msg.them{align-self:flex-start;background:rgba(255,255,255,.08);color:#ddd;border-bottom-left-radius:3px}
+.cp-msg.me{align-self:flex-end;background:rgba(255,255,255,.16);color:#fff;border-bottom-right-radius:3px}
+.cp-input-row{display:flex;gap:6px}
+.cp-input{flex:1;padding:9px 12px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#fff;font-size:13px;font-family:inherit;outline:none}
+.cp-send{width:36px;height:36px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:#fff;font-size:16px;cursor:pointer;flex-shrink:0}
+.cp-quick{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.cp-quick button{padding:6px 11px;border-radius:13px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:rgba(255,255,255,.6);font-size:11px;cursor:pointer;font-family:inherit;transition:all .12s}
+.cp-quick button:active{background:rgba(255,255,255,.18);color:#fff;transform:scale(.93)}
 
-/* overlay */
-.overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:499;background:rgba(0,0,0,.4);display:none}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:499;background:rgba(0,0,0,.5);display:none}
 .overlay.show{display:block}
 
-/* toast */
 .music-btn{position:fixed;bottom:20px;right:20px;z-index:400;width:46px;height:46px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:22px;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 4px 16px rgba(0,0,0,.3);transition:all .2s}
 .music-btn:active{transform:scale(.88)}
-.music-btn.on{animation:musicSpin 2s linear infinite;background:rgba(255,107,107,.3)}
-@keyframes musicSpin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-.toast{position:fixed;top:44%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,.9);border-radius:16px;padding:16px 24px;font-size:16px;font-weight:700;color:#fff;z-index:600;pointer-events:none;text-align:center;max-width:82%;letter-spacing:1px}
-.toast.show{animation:toastPop 1.8s ease-out forwards}
-@keyframes toastPop{0%{transform:translate(-50%,-50%) scale(0)}12%{transform:translate(-50%,-50%) scale(1.1)}22%{transform:translate(-50%,-50%) scale(1)}70%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-50%) scale(.8);opacity:0}}
+.music-btn.on{animation:musRot 2s linear infinite;background:rgba(255,107,107,.3)}
+@keyframes musRot{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 
-@media(max-width:360px){.char-avatar{width:48px;height:48px;font-size:28px}.char-name{font-size:15px}}
+.toast{position:fixed;top:44%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,.92);border-radius:16px;padding:16px 24px;font-size:16px;font-weight:700;color:#fff;z-index:600;pointer-events:none;text-align:center;max-width:82%}
+.toast.show{animation:tp 1.6s ease-out forwards}
+@keyframes tp{0%{transform:translate(-50%,-50%) scale(0)}10%{transform:translate(-50%,-50%) scale(1.1)}20%{transform:translate(-50%,-50%) scale(1)}65%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-50%) scale(.8);opacity:0}}
 </style>
 </head>
 <body>
 
-<div class="bg-particles" id="bgParticles"></div>
+<div class="bg-dots" id="bgDots"></div>
 <div class="toast" id="toast"></div>
-<button class="music-btn" id="musicBtn">🎵</button>
 <div class="overlay" id="overlay"></div>
 <div class="chat-popup" id="chatPopup"></div>
+<button class="music-btn" id="musicBtn">🎵</button>
 
 <div class="app">
-  <div class="header">
-    <h1>天津站之九子夺嫡</h1>
+  <!-- 语录横幅 -->
+  <div class="quote-bar" id="quoteBar" onclick="nextQuote()">
+    <div class="ql">📢 今日抽象语录</div>
+    <div class="qt" id="quoteText"></div>
   </div>
-  <div class="char-grid" id="charGrid"></div>
+
+  <!-- 模式切换 -->
+  <div class="mode-tabs">
+    <button class="mode-tab sel" data-mode="list" id="tabList">👥 九子</button>
+    <button class="mode-tab" data-mode="group" id="tabGroup">💬 群聊</button>
+    <button class="mode-tab" data-mode="moments" id="tabMoments">📱 朋友圈</button>
+  </div>
+
+  <!-- 群聊 -->
+  <div class="group-chat" id="groupChat">
+    <div id="gcMsgs"></div>
+    <button class="gc-all-btn" id="gcAllBtn">📢 @全体成员</button>
+  </div>
+
+  <!-- 角色列表 -->
+  <div class="char-list show" id="charList"></div>
+
+  <!-- 朋友圈 -->
+  <div class="moments" id="moments"></div>
 </div>
 
 <script>
-// 背景粒子
-(function(){const bg=document.getElementById('bgParticles');const colors=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff922b','#cc5de8','#20c997','#ff6b6b'];for(let i=0;i<25;i++){const d=document.createElement('div');d.className='bg-dot';d.style.width=(3+Math.random()*7)+'px';d.style.height=d.style.width;d.style.background=colors[Math.floor(Math.random()*colors.length)];d.style.left=Math.random()*95+'%';d.style.animationDuration=(10+Math.random()*20)+'s';d.style.animationDelay=Math.random()*10+'s';bg.appendChild(d)}})();
-
+(function(){const bg=document.getElementById('bgDots'),cl=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff922b','#cc5de8','#20c997'];for(let i=0;i<20;i++){const d=document.createElement('div');d.className='bg-dot';d.style.width=(3+Math.random()*6)+'px';d.style.height=d.style.width;d.style.background=cl[Math.floor(Math.random()*cl.length)];d.style.left=Math.random()*95+'%';d.style.animationDuration=(10+Math.random()*20)+'s';d.style.animationDelay=Math.random()*10+'s';bg.appendChild(d)}})();
 const toast=document.getElementById('toast');let tt;
-function T(t){clearTimeout(tt);toast.textContent=t;toast.classList.remove('show');void toast.offsetWidth;toast.classList.add('show');tt=setTimeout(()=>toast.classList.remove('show'),2000)}
+function T(t){clearTimeout(tt);toast.textContent=t;toast.classList.remove('show');void toast.offsetWidth;toast.classList.add('show');tt=setTimeout(()=>toast.classList.remove('show'),1700)}
 
-// 搞笑音乐
-let ac=null,mo=false,mt=null;
-const mel=[262,330,392,523,392,330,262,294,349,440,349,294,262,330,392,523,440,349,294,262,330,392,523,659,587,523,440,349,330,294,262],rhy=[180,180,200,200,180,180,220,180,180,200,180,180,220,160,160,180,160,160,200,180,180,180,180,200,160,160,180,160,160,220,280];
-const mb=document.getElementById('musicBtn');
-function tM(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();mo=!mo;if(mo){mb.textContent='🎶';mb.classList.add('on');pN(0)}else{mb.textContent='🎵';mb.classList.remove('on');clearTimeout(mt);if(ac.state==='running')ac.suspend()}}
-function pN(i){if(!mo)return;if(ac.state==='suspended')ac.resume();const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=mel[i%mel.length];g.gain.setValueAtTime(.03,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+rhy[i%rhy.length]/1000);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime);o.stop(ac.currentTime+rhy[i%rhy.length]/1000);mt=setTimeout(()=>pN((i+1)%mel.length),rhy[i%rhy.length])}
-mb.addEventListener('click',tM);
-
-// 角色数据
 const chars=[
-  {id:'yanzi',name:'燕子',emoji:'🐋',tag:'出轨狂魔',color:0,lines:['老廖怎么天天跟我聊天','我都没时间出轨了','烦死了这老廖','什么时候能出轨啊','今天老廖又找我聊了','出轨计划又泡汤了'],replies:['哈哈哈哈','笑死，老廖太粘人了','你出轨谁啊到底','要不你出轨老廖算了','哈哈哈哈哈哈','我服了'],quickReplies:['老廖又来聊了？','出轨成功了没']},
-  {id:'qinyi',name:'秦熠',emoji:'🪼',tag:'填志愿',color:1,lines:['新疆人吃饭了','这志愿填得我想死','新疆菜好吃啊','来新疆吃饭','填志愿比高考还难','我妈又问我志愿了烦死了'],replies:['哈哈哈哈','新疆菜确实好吃','志愿慢慢填别急','来碗拉条子','新疆大盘鸡yyds','笑死了'],quickReplies:['志愿填好了没','今天吃啥']},
-  {id:'laodai',name:'老戴',emoji:'🐕',tag:'虚假学习',color:2,lines:['我真开始学习了','手机怎么这么好玩','再玩五分钟就学','今天一定学','学习计划又泡汤了','不是我不想学是手机先动手的'],replies:['哈哈哈哈我也是','别学了继续玩','五分钟过去了','手机确实好玩','学个屁一起玩','笑死根本学不进去'],quickReplies:['开始学习了吗','手机放下了没']},
-  {id:'qiangzi',name:'强子',emoji:'🪳',tag:'宝妈',color:3,lines:['何云伟太萌了你们看看','我儿子今天又可爱了','何云伟会叫妈妈了','看我儿子照片！','当妈太幸福了','何云伟今天拉粑粑了开心'],replies:['哈哈哈好可爱','何云伟确实萌','晒娃狂魔','发照片啊倒是','我也想rua','可爱！！'],quickReplies:['何云伟今天干啥了','发张照片看看']},
-  {id:'piaoyunli',name:'飘云里',emoji:'🐰',tag:'金鱼杀手',color:4,lines:['沈明珠屋内不许荡秋千','我的金鱼怎么不动了','它应该是睡着了吧','我的金鱼还活着吧','沈明珠你又荡秋千！','金鱼今天也没动但它一定活着'],replies:['哈哈哈哈金鱼都臭了','醒醒金鱼死了','沈明珠又荡秋千了','秋千达人沈明珠','金鱼：我已经死了三天了','笑死'],quickReplies:['金鱼还好吗','沈明珠在哪']},
-  {id:'naima',name:'奶妈',emoji:'🐱',tag:'追老师',color:5,lines:['英语老师今天穿得好好看','我要追到英语老师','英语老师冲我笑了！','为了英语老师我要好好学英语','今天又去办公室找英语老师了','英语老师yyds'],replies:['冲！','英语老师危','追到了吗','祝你成功','哈哈哈哈加油','师生恋可以啊'],quickReplies:['追到了没','英语老师今天啥样']},
-  {id:'luzhilian',name:'陆智联',emoji:'🧑',tag:'求资源',color:6,lines:['谁有网站','我要视频','有没有网站发一下','兄弟们来点资源','最近有没有新网站','谁分享个网站啊'],replies:['没有','百度一下','正经点行不行','哈哈哈哈哈哈','你收敛一点','别搞了'],quickReplies:['找到网站了吗','正经点']}
+  {id:'yanzi',name:'燕子',emoji:'🐋',tag:'出轨狂魔',c:'#448aff',lines:['老廖怎么天天跟我聊天','我都没时间出轨了','烦死了这老廖','什么时候能出轨啊','今天老廖又找我聊了','出轨计划又泡汤了'],replies:['哈哈哈哈','笑死，老廖太粘人了','你出轨谁啊到底','要不你出轨老廖算了','哈哈哈哈哈哈','我服了'],quick:['老廖又来聊了？','出轨成功了没']},
+  {id:'qinyi',name:'秦熠',emoji:'🪼',tag:'填志愿',c:'#aa00ff',lines:['新疆人吃饭了','这志愿填得我想死','新疆菜好吃啊','来新疆吃饭','填志愿比高考还难','我妈又问我志愿了烦死了'],replies:['哈哈哈哈','新疆菜确实好吃','志愿慢慢填别急','来碗拉条子','新疆大盘鸡yyds','笑死了'],quick:['志愿填好了没','今天吃啥']},
+  {id:'laodai',name:'老戴',emoji:'🐕',tag:'虚假学习',c:'#ff9100',lines:['我真开始学习了','手机怎么这么好玩','再玩五分钟就学','今天一定学','学习计划又泡汤了','不是我不想学是手机先动手的'],replies:['哈哈哈哈我也是','别学了继续玩','五分钟过去了','手机确实好玩','学个屁一起玩','笑死根本学不进去'],quick:['开始学习了吗','手机放下了没']},
+  {id:'qiangzi',name:'强子',emoji:'🪳',tag:'宝妈',c:'#8d6e63',lines:['何云伟太萌了你们看看','我儿子今天又可爱了','何云伟会叫妈妈了','看我儿子照片！','当妈太幸福了','何云伟今天拉粑粑了开心'],replies:['哈哈哈好可爱','何云伟确实萌','晒娃狂魔','发照片啊倒是','我也想rua','可爱！！'],quick:['何云伟今天干啥了','发张照片看看']},
+  {id:'piaoyunli',name:'飘云里',emoji:'🐰',tag:'金鱼杀手',c:'#00bfa5',lines:['沈明珠屋内不许荡秋千','我的金鱼怎么不动了','它应该是睡着了吧','我的金鱼还活着吧','沈明珠你又荡秋千！','金鱼今天也没动但它一定活着'],replies:['哈哈哈哈金鱼都臭了','醒醒金鱼死了','沈明珠又荡秋千了','金鱼：我已经死了三天了','笑死','秋千达人沈明珠'],quick:['金鱼还好吗','沈明珠在哪']},
+  {id:'naima',name:'奶妈',emoji:'🐱',tag:'追老师',c:'#ff5252',lines:['英语老师今天穿得好好看','我要追到英语老师','英语老师冲我笑了！','为了英语老师我要好好学英语','今天又去办公室找英语老师了','英语老师yyds'],replies:['冲！','英语老师危','追到了吗','祝你成功','哈哈哈哈加油','师生恋可以啊'],quick:['追到了没','英语老师今天啥样']},
+  {id:'luzhilian',name:'陆智联',emoji:'🧑',tag:'求资源',c:'#ffab00',lines:['谁有网站','我要视频','有没有网站发一下','兄弟们来点资源','最近有没有新网站','谁分享个网站啊'],replies:['没有','百度一下','正经点行不行','哈哈哈哈哈哈','你收敛一点','别搞了'],quick:['找到网站了吗','正经点']}
 ];
 
+// 语录
+const quotes=['老廖怎么天天跟我聊天啊——燕子','手机怎么这么好玩——老戴','沈明珠屋内不许荡秋千！！——飘云里','何云伟会叫妈妈了！！——强子','新疆人吃饭了！！——秦熠','英语老师冲我笑了！！——奶妈','谁有网站我要视频——陆智联'];
+let qi=0;
+function nextQuote(){qi=(qi+1)%quotes.length;document.getElementById('quoteText').textContent=quotes[qi];const b=document.getElementById('quoteBar');b.style.transform='scale(.96)';setTimeout(()=>b.style.transform='scale(1)',150)}
+document.getElementById('quoteText').textContent=quotes[0];
+
+// 模式切换
+const tabList=document.getElementById('tabList'),tabGroup=document.getElementById('tabGroup'),tabMoments=document.getElementById('tabMoments');
+const charList=document.getElementById('charList'),groupChat=document.getElementById('groupChat'),moments=document.getElementById('moments');
+let mode='list';
+function setMode(m){
+  mode=m;tabList.classList.toggle('sel',m==='list');tabGroup.classList.toggle('sel',m==='group');tabMoments.classList.toggle('sel',m==='moments');
+  charList.classList.toggle('show',m==='list');groupChat.classList.toggle('show',m==='group');moments.classList.toggle('show',m==='moments');
+  if(m==='moments')renderMoments();
+}
+tabList.addEventListener('click',()=>setMode('list'));tabGroup.addEventListener('click',()=>setMode('group'));tabMoments.addEventListener('click',()=>setMode('moments'));
+
 // 渲染角色列表
-const grid=document.getElementById('charGrid');
 chars.forEach((c,i)=>{
-  const card=document.createElement('div');
-  card.className='char-card c-'+c.color;
-  card.id='card'+c.id;
-  card.innerHTML='<div class="char-avatar">'+c.emoji+'</div><div class="char-info"><div class="char-name-row"><span class="char-name">'+c.name+'</span><span class="char-tag">'+c.tag+'</span></div><div class="char-latest">'+c.lines[Math.floor(Math.random()*c.lines.length)]+'</div></div>';
-  card.addEventListener('click',()=>openChat(c,card));
-  grid.appendChild(card);
+  const card=document.createElement('div');card.className='char-card';card.id='card'+c.id;
+  card.innerHTML='<div class="av" style="background:linear-gradient(135deg,'+c.c+','+c.c+'88)">'+c.emoji+'</div><div class="info"><div class="nm">'+c.name+'<span class="tag" style="background:'+c.c+'33;color:'+c.c+'">'+c.tag+'</span></div><div class="lt">'+c.lines[Math.floor(Math.random()*c.lines.length)]+'</div></div><div class="nudge-hint">👋</div>';
+  card.addEventListener('click',function(e){
+    // 双击=拍一拍
+    if(card._lastTap&&Date.now()-card._lastTap<400){nudgeChar(c,card);card._lastTap=0;return}
+    card._lastTap=Date.now();setTimeout(()=>{if(card._lastTap&&Date.now()-card._lastTap>400)openChat(c,card)},420);
+  });
+  charList.appendChild(card);
 });
 
-// 打开聊天
-const chatPopup=document.getElementById('chatPopup'),overlay=document.getElementById('overlay');
-let currentChar=null,msgCount=0;
+// 拍一拍
+function nudgeChar(c,card){
+  card.classList.add('nudged');setTimeout(()=>card.classList.remove('nudged'),500);
+  T('👋 你拍了拍 '+c.name+'：'+c.lines[Math.floor(Math.random()*c.lines.length)]);
+}
 
+// 群聊
+const gcMsgs=document.getElementById('gcMsgs');
+const gcColors=['#82b1ff','#ea80fc','#ffab40','#bcaaa4','#64ffda','#ff8a80','#ffff00'];
+const gcNames=['燕子🦋','秦熠🪼','老戴🐕','强子🪳','飘云里🐰','奶妈🐱','陆智联🧑'];
+function addGcMsg(i,text){const d=document.createElement('div');d.className='gc-msg';d.style.background=gcColors[i]+'18';d.style.color=gcColors[i];d.innerHTML='<div class="gc-who">'+gcNames[i]+'</div>'+text;gcMsgs.appendChild(d);gcMsgs.scrollTop=gcMsgs.scrollHeight}
+function chaosGC(){
+  gcMsgs.innerHTML='';const n=5+Math.floor(Math.random()*8);
+  for(let j=0;j<n;j++){const ci=Math.floor(Math.random()*chars.length);setTimeout(()=>addGcMsg(ci,chars[ci].lines[Math.floor(Math.random()*chars[ci].lines.length)]),j*(300+Math.random()*600))}
+}
+function allMembers(){
+  addGcMsg(Math.floor(Math.random()*7),'@全体成员 出来！！！');
+  const ids=shuffleArr([0,1,2,3,4,5,6]);
+  ids.forEach((i,idx)=>{setTimeout(()=>addGcMsg(i,chars[i].replies[Math.floor(Math.random()*chars[i].replies.length)]),400+idx*(350+Math.random()*500))});
+}
+function shuffleArr(a){return a.sort(()=>Math.random()-.5)}
+chaosGC();
+document.getElementById('gcAllBtn').addEventListener('click',allMembers);
+
+// 刷新群聊
+setInterval(()=>{if(mode==='group'){if(Math.random()<.25){const ci=Math.floor(Math.random()*7);addGcMsg(ci,chars[ci].lines[Math.floor(Math.random()*chars[ci].lines.length)])}}},4000);
+
+// 朋友圈
+function renderMoments(){
+  const mm=document.getElementById('moments');mm.innerHTML='';
+  const posts=[
+    {ci:0,text:'老廖又来找我聊天了，我真的服了，出轨大业又搁置了一天🙄',likes:23,comments:5},
+    {ci:1,text:'新疆人吃饭了！！（配图：大盘鸡）🍗',likes:41,comments:12},
+    {ci:2,text:'今天我真开始学习了（配图：手机屏幕）📱',likes:35,comments:8},
+    {ci:4,text:'沈明珠！！屋内不许荡秋千！！说了多少次了！！😡',likes:56,comments:15},
+    {ci:5,text:'英语老师今天穿了件白衬衫，太好看了我要死了😭💕',likes:18,comments:6},
+    {ci:3,text:'何云伟今天会叫妈妈了！！老母亲落泪😭😭😭',likes:67,comments:22},
+    {ci:6,text:'谁有网站啊我要视频，兄弟们帮帮忙',likes:0,comments:3},
+    {ci:0,text:'我感觉我出轨的机会来了，老廖今天没找我！！激动',likes:31,comments:9},
+    {ci:2,text:'手机真的太好玩了，我宣布今天不学了😂',likes:44,comments:11},
+    {ci:4,text:'我的金鱼还活着，它只是睡着了，一定是这样🐟',likes:29,comments:14}
+  ];
+  shuffleArr(posts).slice(0,6).forEach((p,i)=>{
+    const c=chars[p.ci];const d=document.createElement('div');d.className='moment-card';d.style.animationDelay=(i*.06)+'s';
+    d.innerHTML='<div class="m-header"><div class="m-av" style="background:'+c.c+'33">'+c.emoji+'</div><div><div class="m-name">'+c.name+'</div><div class="m-time">'+(3+Math.floor(Math.random()*55))+'分钟前</div></div></div><div class="m-text">'+p.text+'</div><div class="m-actions"><span>❤️ '+p.likes+'</span><span>💬 '+p.comments+'</span><span>😆</span></div>';
+    mm.appendChild(d);
+  });
+}
+
+// 聊天弹窗
+const chatPopup=document.getElementById('chatPopup'),overlay=document.getElementById('overlay');
 function openChat(c,card){
-  currentChar=c;msgCount=0;
-  card.classList.add('pop');setTimeout(()=>card.classList.remove('pop'),400);
-  chatPopup.innerHTML='<div class="cp-header"><span class="cp-name">'+c.emoji+' '+c.name+'</span><button class="cp-close" onclick="closeChat()">✕</button></div><div class="cp-msgs" id="cpMsgs"><div class="cp-msg them">'+c.lines[Math.floor(Math.random()*c.lines.length)]+'</div></div><div class="cp-input-row"><input class="cp-input" id="cpInput" placeholder="回复 '+c.name+'..." maxlength="200" autocomplete="off"><button class="cp-reply-btn" id="cpSend">➤</button></div><div class="cp-quick" id="cpQuick"></div>';
-  // 快捷回复
-  const cq=document.getElementById('cpQuick');
-  c.quickReplies.forEach(q=>{const b=document.createElement('button');b.textContent=q;b.addEventListener('click',()=>{addMsg(q,'me');setTimeout(()=>autoReply(c),400+Math.random()*600)});cq.appendChild(b)});
+  card.classList.add('nudged');setTimeout(()=>card.classList.remove('nudged'),500);
+  chatPopup.innerHTML='<div class="cp-header"><span class="cp-name">'+c.emoji+' '+c.name+'</span><button class="cp-close" onclick="closeChat()">✕</button></div><div class="cp-msgs" id="cpMsgs"><div class="cp-msg them">'+c.lines[Math.floor(Math.random()*c.lines.length)]+'</div></div><div class="cp-input-row"><input class="cp-input" id="cpInput" placeholder="跟'+c.name+'说点什么..." maxlength="200" autocomplete="off"><button class="cp-send" id="cpSend">➤</button></div><div class="cp-quick" id="cpQuick"></div>';
+  const cq=document.getElementById('cpQuick');c.quick.forEach(q=>{const b=document.createElement('button');b.textContent=q;b.addEventListener('click',()=>{addMsg(q,'me');setTimeout(()=>autoReply(c),400+Math.random()*600)});cq.appendChild(b)});
   chatPopup.classList.add('show');overlay.classList.add('show');
   document.getElementById('cpInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();sendMsg(c)}});
-  document.getElementById('cpSend').addEventListener('click',()=>sendMsg(c));
-  document.getElementById('cpInput').focus();
-  scrollMsgs();
+  document.getElementById('cpSend').addEventListener('click',()=>sendMsg(c));document.getElementById('cpInput').focus();
 }
-
-function sendMsg(c){
-  const inp=document.getElementById('cpInput');if(!inp||!inp.value.trim())return;
-  addMsg(inp.value,'me');inp.value='';setTimeout(()=>autoReply(c),400+Math.random()*700);
-}
-
-function addMsg(text,who){
-  const msgs=document.getElementById('cpMsgs');if(!msgs)return;
-  const d=document.createElement('div');d.className='cp-msg '+who;d.textContent=text;msgs.appendChild(d);scrollMsgs()
-}
-
-function autoReply(c){
-  addMsg(c.replies[Math.floor(Math.random()*c.replies.length)],'them');
-  // 偶尔追发一条
-  if(Math.random()<.35)setTimeout(()=>addMsg(c.lines[Math.floor(Math.random()*c.lines.length)],'them'),500+Math.random()*600);
-}
-
-function scrollMsgs(){setTimeout(()=>{const m=document.getElementById('cpMsgs');if(m)m.scrollTop=m.scrollHeight},100)}
-
-function closeChat(){chatPopup.classList.remove('show');overlay.classList.remove('show');currentChar=null}
+function sendMsg(c){const inp=document.getElementById('cpInput');if(!inp||!inp.value.trim())return;addMsg(inp.value,'me');inp.value='';setTimeout(()=>autoReply(c),400+Math.random()*700)}
+function addMsg(text,who){const msgs=document.getElementById('cpMsgs');if(!msgs)return;const d=document.createElement('div');d.className='cp-msg '+who;d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight}
+function autoReply(c){addMsg(c.replies[Math.floor(Math.random()*c.replies.length)],'them');if(Math.random()<.3)setTimeout(()=>addMsg(c.lines[Math.floor(Math.random()*c.lines.length)],'them'),500+Math.random()*600)}
+function closeChat(){chatPopup.classList.remove('show');overlay.classList.remove('show')}
 overlay.addEventListener('click',closeChat);
+
+// 搞笑音乐
+let ac=null,mo=false,mt2=null;
+const mel=[262,330,392,523,392,330,262,294,349,440,349,294,262,330,392,523,440,349,294,262,330,392,523,659,587,523,440,349,330,294,262],rhy=[180,180,200,200,180,180,220,180,180,200,180,180,220,160,160,180,160,160,200,180,180,180,180,200,160,160,180,160,160,220,280];
+function tM(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();mo=!mo;const b=document.getElementById('musicBtn');if(mo){b.textContent='🎶';b.classList.add('on');pN(0)}else{b.textContent='🎵';b.classList.remove('on');clearTimeout(mt2);if(ac.state==='running')ac.suspend()}}
+function pN(i){if(!mo)return;if(ac.state==='suspended')ac.resume();const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=mel[i%mel.length];g.gain.setValueAtTime(.025,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+rhy[i%rhy.length]/1000);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime);o.stop(ac.currentTime+rhy[i%rhy.length]/1000);mt2=setTimeout(()=>pN((i+1)%mel.length),rhy[i%rhy.length])}
+document.getElementById('musicBtn').addEventListener('click',tM);
 </script>
 </body>
 </html>
