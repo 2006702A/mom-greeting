@@ -106,7 +106,7 @@ body{min-height:100%;overflow-y:auto;overflow-x:hidden;background:#0f0f1a;font-f
 <button class="music-btn" id="musicBtn">🎵</button>
 
 <div class="app">
-  <div class="api-bar">🤖 DeepSeek Key：<input type="password" id="apiKeyInput" placeholder="sk-... 去 platform.deepseek.com 免费注册" autocomplete="off"><button id="apiSaveBtn">保存</button><span class="api-ok" id="apiOk">✅ AI就绪</span></div>
+  <div class="api-bar">🤖 API Key：<input type="password" id="apiKeyInput" placeholder="sk-ant-... 你的Anthropic Key" autocomplete="off"><button id="apiSaveBtn">保存</button><span class="api-ok" id="apiOk">✅ AI就绪</span></div>
 
   <div class="live-scene" id="liveScene"><div class="live-chars" id="liveChars"></div></div>
 
@@ -165,17 +165,17 @@ async function aiChat(charId,userMsg,history){
   if(!API_KEY)return null;
   try{
     const sys=buildSys(charId);
-    const msgs=[{role:'system',content:sys}];
+    const msgs=[];
     const recent=history.slice(-6);
     for(const h of recent)msgs.push(h);
     msgs.push({role:'user',content:userMsg});
-    const resp=await fetch('https://api.deepseek.com/v1/chat/completions',{
-      method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+API_KEY},
-      body:JSON.stringify({model:'deepseek-chat',max_tokens:200,messages:msgs})
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-3-5-sonnet-20241022',max_tokens:200,system:sys,messages:msgs})
     });
     const data=await resp.json();
     if(!resp.ok){T('API报错：'+(data.error?data.error.message:resp.status));return null}
-    return data.choices[0].message.content.trim();
+    return data.content[0].text.trim();
   }catch(e){T('连不上：'+e.message);return null}
 }
 
